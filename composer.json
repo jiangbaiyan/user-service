@@ -1,0 +1,39 @@
+{
+  "name": "jiangbaiyan/nos",
+  "type": "project",
+  "description": "A PHP framework focused on API development based on Yaf by jiangbaiyan && guobutao",
+  "repositories": {
+    "packagist": {
+      "type": "composer",
+      "url": "https://packagist.phpcomposer.com"
+    }
+  },
+  "keywords": ["api","nos","yaf"],
+  "homepage": "https://github.com/jiangbaiyan/nos",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "baiyan Jiang",
+      "email": "987082332@qq.com",
+      "homepage": "https://github.com/jiangbaiyan",
+      "role": "Developer"
+    }
+  ],
+  "config": {
+    "optimize-autoloader": true,
+    "preferred-install": "dist",
+    "sort-packages": true
+  },
+  "require": {
+    "php": ">=7.0.0",
+    "ext-json": "*",
+    "ext-mbstring": "*",
+    "ext-pdo": "*",
+    "jiangbaiyan/nos-framework": "dev-master"
+  },
+  "scripts": {
+    "post-autoload-dump": [
+      "find vendor/ -type d | grep .git | xargs rm -rf"
+    ]
+  }
+}
