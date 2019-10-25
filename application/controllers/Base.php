@@ -13,13 +13,7 @@ abstract class BaseController extends Controller_Abstract
 {
 
     /**
-     * 当前登录用户
-     * @var array $user
-     */
-    protected $user = [];
-
-    /**
-     * 是否需要用户鉴权
+     * 是否需要接口鉴权
      * @var bool $auth
      */
     protected $auth = true;
@@ -65,7 +59,7 @@ abstract class BaseController extends Controller_Abstract
      */
     private function init()
     {
-        $this->auth && $this->user = $this->auth();
+        $this->auth && $this->auth();
     }
 
 }
