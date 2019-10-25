@@ -36,15 +36,14 @@ abstract class BaseController extends Controller_Abstract
         $appId = $params['appId'];
         $appSecret = AppModel::get($appId);
         // 与客户端采用同样的加密算法
-        $backAccessToken = md5($params['timestamp'] . $appId, $appSecret);
+        $backAccessToken = md5($params['timestamp'] . $appId .  $appSecret);
         $frontAccessToken = $params['accessToken'];
         // 判断前后端的accessToken是否相等
         if ($frontAccessToken != $backAccessToken) {
             throw new UnauthorizedException("auth|app:{$appId}_auth_failed
             |frontAccessToken:{$params['accessToken']}
             |backAccessToken:{$backAccessToken}
-            |timestamp:{$params['timestamp']}
-            ");
+            |timestamp:{$params['timestamp']}");
         }
         return true;
     }
