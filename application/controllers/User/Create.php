@@ -7,8 +7,6 @@
  * Time: 10:20 上午
  */
 
-namespace User;
-
 use Nos\Comm\Validator;
 use Nos\Exception\ParamValidateFailedException;
 use Nos\Http\Request;
