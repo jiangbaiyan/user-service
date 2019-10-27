@@ -6,7 +6,7 @@
  * Time: 09:03
  */
 
-namespace App;
+namespace Common\App;
 
 use Nos\Comm\Redis;
 use Nos\Exception\CoreException;
