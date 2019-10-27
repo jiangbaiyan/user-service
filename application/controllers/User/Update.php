@@ -7,7 +7,7 @@
  * Time: 10:22 上午
  */
 
-class User_Update extends BaseController
+class User_UpdateController extends BaseController
 {
 
     /**

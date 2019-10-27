@@ -7,7 +7,7 @@
  * Time: 10:32 上午
  */
 
-class User_Delete extends BaseController
+class User_DeleteController extends BaseController
 {
 
     /**

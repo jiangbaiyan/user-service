@@ -15,7 +15,7 @@ use Nos\Exception\ParamValidateFailedException;
 use Nos\Http\Request;
 use Nos\Http\Response;
 
-class User_Query extends BaseController
+class User_QueryController extends BaseController
 {
 
     /**
