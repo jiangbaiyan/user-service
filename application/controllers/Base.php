@@ -24,14 +24,13 @@ abstract class BaseController extends Controller_Abstract
      * @throws UnauthorizedException
      * @throws CoreException
      * @throws ParamValidateFailedException
-     * @throws ResourceNotFoundException
      */
     protected function auth()
     {
         Validator::make($params = Request::all(), [
             'appId' => 'required',
             'accessToken' => 'required',
-            'timestamp' => 'required|integer'
+            'timestamp' => 'required'
         ]);
         $appId = $params['appId'];
         $appSecret = AppModel::get($appId);
