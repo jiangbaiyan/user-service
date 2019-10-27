@@ -1,6 +1,6 @@
 <?php
 
-use App\AppModel;
+use Common\App\AppModel;
 use Nos\Comm\Validator;
 use Nos\Exception\CoreException;
 use Nos\Exception\ParamValidateFailedException;
@@ -21,9 +21,11 @@ abstract class BaseController extends Controller_Abstract
 
     /**
      * 接口鉴权函数
-     * @throws UnauthorizedException
+     * @return bool
      * @throws CoreException
      * @throws ParamValidateFailedException
+     * @throws ResourceNotFoundException
+     * @throws UnauthorizedException
      */
     protected function auth()
     {
