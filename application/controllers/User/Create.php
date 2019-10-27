@@ -8,9 +8,12 @@
  */
 
 use Nos\Comm\Validator;
+use Nos\Exception\CoreException;
+use Nos\Exception\OperateFailedException;
 use Nos\Exception\ParamValidateFailedException;
 use Nos\Http\Request;
 use Nos\Http\Response;
+use User\UserModel;
 
 class User_CreateController extends BaseController
 {
@@ -18,8 +21,9 @@ class User_CreateController extends BaseController
     /**
      * 用户创建接口
      * @return string
-     * @throws \Nos\Exception\CoreException
+     * @throws CoreException
      * @throws ParamValidateFailedException
+     * @throws OperateFailedException
      */
     protected function indexAction()
     {

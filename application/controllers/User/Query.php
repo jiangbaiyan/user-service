@@ -12,6 +12,7 @@ use Nos\Exception\CoreException;
 use Nos\Exception\ParamValidateFailedException;
 use Nos\Http\Request;
 use Nos\Http\Response;
+use User\UserModel;
 
 class User_QueryController extends BaseController
 {
