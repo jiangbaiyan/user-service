@@ -29,6 +29,7 @@
     "ext-json": "*",
     "ext-mbstring": "*",
     "ext-pdo": "*",
+    "firebase/php-jwt": "^5.0",
     "jiangbaiyan/nos-framework": "dev-master"
   },
   "scripts": {

@@ -26,11 +26,24 @@ class UserModel extends BaseModel
      * @return array
      * @throws CoreException
      */
-    public static function getUser(array $aQuery, int $page, int $length)
+    public static function getUser(array $aQuery, int $page = 0, int $length = 0)
     {
         return self::select(['*'], $aQuery, [
             'page' => $page,
             'length' => $length
+        ]);
+    }
+
+    /**
+     * 通过邮箱获取用户
+     * @param string $strEmail
+     * @return array
+     * @throws CoreException
+     */
+    public static function getUserByEmail(string $strEmail)
+    {
+        return self::getUser([
+            ['email', '=', $strEmail]
         ]);
     }
 
@@ -54,7 +67,7 @@ class UserModel extends BaseModel
      */
     public static function createUser(array $aData)
     {
-        $nRows = self::insertBatch($aData);
+        $nRows = self::insert($aData);
         if (!$nRows) {
             throw new OperateFailedException('userModel|create_batch_failed|data:' . json_encode($aData));
         }
