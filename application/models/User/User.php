@@ -19,14 +19,14 @@ class UserModel extends BaseModel
     public static $table = 'user';
 
     /**
-     * 获取用户列表
+     * 查询用户列表
      * @param array $aQuery
      * @param int $page
      * @param int $length
      * @return array
      * @throws CoreException
      */
-    public static function getList(array $aQuery, int $page, int $length)
+    public static function getUser(array $aQuery, int $page, int $length)
     {
         return self::select(['*'], $aQuery, [
             'page' => $page,
@@ -52,7 +52,7 @@ class UserModel extends BaseModel
      * @throws CoreException
      * @throws OperateFailedException
      */
-    public static function create(array $aData)
+    public static function createUser(array $aData)
     {
         $nRows = self::insertBatch($aData);
         if (!$nRows) {
@@ -62,19 +62,17 @@ class UserModel extends BaseModel
     }
 
     /**
-     * 根据id删除用户(支持批量)
-     * @param array $aIds 要删除的id
+     * 删除用户
+     * @param array $aQuery
      * @return int
      * @throws CoreException
      * @throws OperateFailedException
      */
-    public static function _delete(array $aIds)
+    public static function deleteUser(array $aQuery)
     {
-        $nRows = self::delete([
-            ['id', 'in', $aIds]
-        ]);
+        $nRows = self::delete($aQuery);
         if (!$nRows) {
-            throw new OperateFailedException('userModel|delete_failed|ids:' . json_encode($aIds));
+            throw new OperateFailedException('userModel|delete_failed|query:' . json_encode($aQuery));
         }
         return $nRows;
     }
@@ -82,20 +80,17 @@ class UserModel extends BaseModel
 
     /**
      * 根据id更新用户数据
-     * @param int $nId 更新的记录id
-     * @param array $aParams 更新的数据
+     * @param array $aQuery 要更新的记录行
+     * @param array $aData 更新的数据
      * @return int
      * @throws CoreException
      * @throws OperateFailedException
      */
-    public static function updateById(int $nId, array $aParams)
+    public static function updateUser(array $aQuery, array $aData)
     {
-        $aWhere = [
-            ['id', '=', $nId]
-        ];
-        $nRows = self::update($aParams, $aWhere);
+        $nRows = self::update($aData, $aQuery);
         if (!$nRows) {
-            throw new OperateFailedException('userModel|update_failed|params:' . json_encode($aParams) . '|id:' . $nId);
+            throw new OperateFailedException('userModel|update_failed|params:' . json_encode($aData) . '|query:' . json_encode($aQuery));
         }
         return $nRows;
     }

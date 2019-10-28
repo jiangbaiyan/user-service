@@ -23,14 +23,14 @@ class User_QueryController extends BaseController
      * @throws CoreException
      * @throws ParamValidateFailedException
      */
-    protected function indexAction()
+    public function indexAction()
     {
         Validator::make($aParams = Request::all(), [
             'page'   => 'integer',
             'length' => 'integer',
             'query'   => 'array'
         ]);
-        $aData = UserModel::getList($aParams['query'], $aParams['page'], $aParams['length']);
+        $aData = UserModel::getUser($aParams['query'], $aParams['page'], $aParams['length']);
         return Response::apiSuccess($aData);
     }
 }

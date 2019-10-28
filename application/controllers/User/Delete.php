@@ -1,20 +1,35 @@
 <?php
 /**
- * 删除用户
+ * 用户删除接口
  * Created by PhpStorm.
  * User: jiangbaiyan
  * Date: 2019/10/27
- * Time: 10:32 上午
+ * Time: 10:20 上午
  */
+
+use Nos\Comm\Validator;
+use Nos\Exception\CoreException;
+use Nos\Exception\OperateFailedException;
+use Nos\Exception\ParamValidateFailedException;
+use Nos\Http\Request;
+use Nos\Http\Response;
+use User\UserModel;
 
 class User_DeleteController extends BaseController
 {
 
     /**
-     * 业务逻辑
+     * 删除用户
+     * @throws CoreException
+     * @throws OperateFailedException
+     * @throws ParamValidateFailedException
      */
-    protected function indexAction()
+    public function indexAction()
     {
-
+        Validator::make($aParams = Request::all(), [
+            'query' => 'required|array'
+        ]);
+        UserModel::deleteUser($aParams['query']);
+        return Response::apiSuccess('删除成功');
     }
 }

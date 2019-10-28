@@ -25,12 +25,12 @@ class User_CreateController extends BaseController
      * @throws ParamValidateFailedException
      * @throws OperateFailedException
      */
-    protected function indexAction()
+    public function indexAction()
     {
         Validator::make($aParams = Request::all(), [
             'data' => 'required|array'
         ]);
-        $bool = UserModel::create($aParams['data']);
-        return Response::apiSuccess();
+        UserModel::createUser($aParams['data']);
+        return Response::apiSuccess('创建成功');
     }
 }
