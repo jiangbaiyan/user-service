@@ -28,16 +28,16 @@ class Resource_CreateController extends BaseController
     {
         Validator::make($aParams = Request::all(), [
             'parent_resource_id' => 'required|integer',
-            'key' => 'required'
+            'name' => 'required'
         ]);
         $aStack = [];
-        // 拼接节点key
+        // 拼接节点名
         $this->findParent($aParams['parent_resource_id'], $aStack);
         // '.'为分隔符
-        $strKey = implode('.', $aStack) . '.' . $aParams['key'];
+        $strFullName = implode('.', $aStack) . '.' . $aParams['name'];
         $aInsert = [
             'parent_resource_id' => $aParams['parent_resource_id'],
-            'key' => $strKey
+            'name' => $strFullName
         ];
         ResourceModel::createResource($aInsert);
         Response::apiSuccess('创建成功');
@@ -45,7 +45,7 @@ class Resource_CreateController extends BaseController
 
 
     /**
-     * 递归的处理当前key的所有父节点
+     * 递归的处理当前节点的所有祖先节点
      * @param int $nParentResourceId
      * @param array $aStack
      * @return bool
@@ -57,7 +57,7 @@ class Resource_CreateController extends BaseController
         if (!empty($nParentResourceId)) {
             // 查询父节点名称
             $aNode = ResourceModel::getResourceById($nParentResourceId);
-            $strNodeName = $aNode['key'];
+            $strNodeName = $aNode['name'];
             $nParentResourceId = $aNode['parent_resource_id'];
             // 将节点名进栈
             array_push($aStack, $strNodeName);
@@ -65,7 +65,7 @@ class Resource_CreateController extends BaseController
             $this->findParent($nParentResourceId, $aStack);
         } else { // 父节点id为0，说明已经到了最顶层节点，push完顶层节点名称后终止递归
             $aNode = ResourceModel::getResourceById($nParentResourceId);
-            $strNodeName = $aNode['key'];
+            $strNodeName = $aNode['name'];
             array_push($aStack, $strNodeName);
             return true;
         }

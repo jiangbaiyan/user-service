@@ -35,15 +35,15 @@ class ResourceModel extends BaseModel
     }
 
     /**
-     * 通过邮箱获取资源节点
-     * @param string $strKey
+     * 通过节点名获取资源节点
+     * @param string $strName
      * @return array
      * @throws CoreException
      */
-    public static function getResourceByKey(string $strKey)
+    public static function getResourceByName(string $strName)
     {
         return self::getResource([
-            ['key', '=', $strKey]
+            ['name', '=', $strName]
         ]);
     }
 
@@ -65,7 +65,7 @@ class ResourceModel extends BaseModel
      * $aData示例：
      * [
      *    'parent_resource_id' => '0',
-     *    'key' => 'ndp'
+     *    'name' => 'ndp'
      * ]
      * @param array $aData
      * @return mixed
