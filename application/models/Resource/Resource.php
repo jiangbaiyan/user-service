@@ -35,15 +35,15 @@ class ResourceModel extends BaseModel
     }
 
     /**
-     * 通过节点名获取资源节点
-     * @param string $strName
+     * 通过完整节点名获取资源节点
+     * @param string $strFullKey
      * @return array
      * @throws CoreException
      */
-    public static function getResourceByName(string $strName)
+    public static function getResourceByFullKey(string $strFullKey)
     {
         return self::getResource([
-            ['name', '=', $strName]
+            ['full_key', '=', $strFullKey]
         ]);
     }
 

@@ -53,7 +53,7 @@ class Unified_RegisterController extends BaseController
             throw new OperateFailedException("register|email:{$aData['email']}_has_been_registered");
         }
         // 查询该appId是否已经在资源节点中注册
-        $aResource = ResourceModel::getResourceByName($aParams['appId']);
+        $aResource = ResourceModel::getResourceByFullKey($aParams['appId']);
         if (empty($aResource)) {
             throw new OperateFailedException("register|{$aParams['appId']}_was_not_registered_in_resource");
         }
@@ -81,7 +81,7 @@ class Unified_RegisterController extends BaseController
         if (!$bool) {
             throw new OperateFailedException('register|redis_set_token_failed');
         }
-        // 返回用户数据+token
+        // 返回用户数据+token+权限
         return Response::apiSuccess([
             'user'          => $aData,
             'unified_token' => $strToken
