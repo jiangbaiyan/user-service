@@ -14,6 +14,7 @@ use Nos\Exception\CoreException;
 use Nos\Exception\OperateFailedException;
 use Nos\Exception\ParamValidateFailedException;
 use Nos\Http\Request;
+use Resource\ResourceModel;
 use User\UserModel;
 use Nos\Comm\Redis;
 use Nos\Http\Response;
@@ -43,23 +44,30 @@ class Unified_RegisterController extends BaseController
             'email' => 'required|email',
             'password' => 'required'
         ]);
-        $strEmail = $aData['email'];
+        $strEmail    = $aData['email'];
         $strPassword = $aData['password'];
-        $strAppId = $aParams['appId'];
+        $strAppId    = $aParams['appId'];
         // 防止重复注册
         $aUser = UserModel::getUserByEmail($strEmail);
         if ($aUser) {
             throw new OperateFailedException("register|email:{$aData['email']}_has_been_registered");
         }
+        // 查询该appId是否已经在资源节点中注册
+        $aResource = ResourceModel::getResourceByKey($aParams['appId']);
+        if (empty($aResource)) {
+            throw new OperateFailedException("register|{$aParams['appId']}_was_not_registered_in_resource");
+        }
         // 组装插入数据
         $aInsert = [
             'email' => $strEmail,
             'password' => md5($strAppId . $strPassword),
+            'resource_id' => $aResource['id']
         ];
         // 入库
         if (!UserModel::createUser($aInsert)) {
             throw new OperateFailedException('register|created_user_failed|data:' . json_encode($aData));
         }
+        // 获取刚入库的用户
         $aUser = UserModel::getUserByEmail($strEmail);
         $strJwtKey = Config::get('application.ini')['jwt_key'];
         // 根据用户数据获取加密token

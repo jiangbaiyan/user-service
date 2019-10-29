@@ -13,6 +13,14 @@ abstract class BaseController extends Controller_Abstract
 {
 
     /**
+     * 已经接入用户中心的业务线
+     */
+    const APPS = [
+        'ndp',
+        'nmp'
+    ];
+
+    /**
      * 是否需要接口鉴权
      * @var bool $auth
      */
@@ -29,22 +37,25 @@ abstract class BaseController extends Controller_Abstract
      */
     protected function auth()
     {
-        Validator::make($params = Request::all(), [
+        Validator::make($aParams = Request::all(), [
             'appId' => 'required',
             'accessToken' => 'required',
             'timestamp' => 'required'
         ]);
-        $appId = $params['appId'];
-        $appSecret = AppModel::get($appId);
+        $strAppId = $aParams['appId'];
+        if (!in_array($strAppId, self::APPS)) {
+            throw new UnauthorizedException("auth|app:{$strAppId}_was_not_registered");
+        }
+        $strAppSecret = AppModel::getAppSecretByAppId($strAppId);
         // 与客户端采用同样的加密算法
-        $backAccessToken = md5($params['timestamp'] . $appId .  $appSecret);
-        $frontAccessToken = $params['accessToken'];
+        $strBackAccessToken = md5($aParams['timestamp'] . $strAppId .  $strAppSecret);
+        $strFrontAccessToken = $aParams['accessToken'];
         // 判断前后端的accessToken是否相等
-        if ($frontAccessToken != $backAccessToken) {
-            throw new UnauthorizedException("auth|app:{$appId}_auth_failed
-            |frontAccessToken:{$params['accessToken']}
-            |backAccessToken:{$backAccessToken}
-            |timestamp:{$params['timestamp']}");
+        if ($strFrontAccessToken != $strBackAccessToken) {
+            throw new UnauthorizedException("auth|app:{$strAppId}_auth_failed
+            |frontAccessToken:{$aParams['accessToken']}
+            |backAccessToken:{$strBackAccessToken}
+            |timestamp:{$aParams['timestamp']}");
         }
         return true;
     }

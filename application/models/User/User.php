@@ -48,17 +48,11 @@ class UserModel extends BaseModel
     }
 
     /**
-     * 创建用户(支持批量)
+     * 创建用户
      * $aData示例：
      * [
-     *     [
-     *         'name' => 'jiangbaiyan',
-     *         'age'  => 15
-     *     ],
-     *     [
-     *         'name' => 'grape',
-     *         'age'  => 15
-     *     ]
+     *     'name' => 'grape',
+     *     'age'  => 15
      * ]
      * @param array $aData
      * @return mixed
@@ -92,7 +86,7 @@ class UserModel extends BaseModel
 
 
     /**
-     * 根据id更新用户数据
+     * 更新用户
      * @param array $aQuery 要更新的记录行
      * @param array $aData 更新的数据
      * @return int

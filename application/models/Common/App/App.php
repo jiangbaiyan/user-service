@@ -20,52 +20,35 @@ class AppModel
 
     /**
      * 通过appId获取appSecret
-     * @param string $appId
+     * @param string $strAppId
      * @return bool|mixed|string
-     * @throws ResourceNotFoundException
      * @throws CoreException
+     * @throws ResourceNotFoundException
      */
-    public static function get(string $appId)
+    public static function getAppSecretByAppId(string $strAppId)
     {
-        $appSecret = Redis::getInstance()->hGet(self::REDIS_APP_HASH_KEY, $appId);
-        if (!$appSecret) {
+        $strAppSecret = Redis::getInstance()->hGet(self::REDIS_APP_HASH_KEY, $strAppId);
+        if (!$strAppSecret) {
             throw new ResourceNotFoundException('app|app_secret_not_found');
         }
-        return $appSecret;
+        return $strAppSecret;
     }
 
     /**
      * 设置appId与appSecret
-     * @param string $appId
-     * @param string $appSecret
+     * @param string $strAppId
+     * @param string $strAppSecret
      * @return bool
      * @throws CoreException
      * @throws OperateFailedException
      */
-    public static function set(string $appId, string $appSecret)
+    public static function set(string $strAppId, string $strAppSecret)
     {
-        $ret = Redis::getInstance()->hSet(self::REDIS_APP_HASH_KEY, $appId, $appSecret);
+        $ret = Redis::getInstance()->hSet(self::REDIS_APP_HASH_KEY, $strAppId, $strAppSecret);
         if (!$ret) {
             throw new OperateFailedException('app|hSet_secret_failed');
         }
         return true;
-    }
-
-
-    /**
-     * 根据业务线生成唯一uuid
-     * @param string $resource
-     * @return string
-     */
-    public static function getUuid(string $resource)
-    {
-        $pattern = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLOMNOPQRSTUVWXYZ1234567890';
-        $string = '';
-        for($i = 0; $i < 50; $i++)  {
-            //生成长度50的随机数
-            $string .= $pattern[mt_rand(0, 35)];
-        }
-        return md5(substr($string, 8, 32) . $resource);
     }
 
 }
