@@ -35,6 +35,21 @@ class UserModel extends BaseModel
     }
 
     /**
+     * 通过用户id获取用户
+     * @param int $nId
+     * @param int $page
+     * @param int $length
+     * @return array
+     * @throws CoreException
+     */
+    public static function getUserById(int $nId, int $page = 0, int $length = 0)
+    {
+        return self::getUser([
+            ['id', '=', $nId]
+        ]);
+    }
+
+    /**
      * 通过邮箱获取用户
      * @param string $strEmail
      * @return array

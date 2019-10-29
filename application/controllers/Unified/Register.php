@@ -35,27 +35,22 @@ class Unified_RegisterController extends BaseController
      */
     public function indexAction()
     {
-        // 验证外层
         Validator::make($aParams = Request::all(), [
-            'data' => 'required'
-        ]);
-        // 验证内层
-        Validator::make($aData = $aParams['data'], [
             'email' => 'required|email',
             'password' => 'required'
         ]);
-        $strEmail    = $aData['email'];
-        $strPassword = $aData['password'];
+        $strEmail    = $aParams['email'];
+        $strPassword = $aParams['password'];
         $strAppId    = $aParams['appId'];
         // 防止重复注册
         $aUser = UserModel::getUserByEmail($strEmail);
         if ($aUser) {
-            throw new OperateFailedException("register|email:{$aData['email']}_has_been_registered");
+            throw new OperateFailedException("register|email:{$strEmail}_has_been_registered");
         }
         // 查询该appId是否已经在资源节点中注册
         $aResource = ResourceModel::getResourceByFullKey($aParams['appId']);
         if (empty($aResource)) {
-            throw new OperateFailedException("register|{$aParams['appId']}_was_not_registered_in_resource");
+            throw new OperateFailedException("register|{$strAppId}_was_not_registered_in_resource");
         }
         // 组装插入数据
         $aInsert = [
@@ -65,14 +60,18 @@ class Unified_RegisterController extends BaseController
         ];
         // 入库
         if (!UserModel::createUser($aInsert)) {
-            throw new OperateFailedException('register|created_user_failed|data:' . json_encode($aData));
+            throw new OperateFailedException('register|created_user_failed|data:' . json_encode($aInsert));
         }
         // 获取刚入库的用户
         $aUser = UserModel::getUserByEmail($strEmail);
         $strJwtKey = Config::get('application.ini')['jwt_key'];
         // 根据用户数据获取加密token
         try {
-            $strToken = JWT::encode($aUser, $strJwtKey);
+            $aSeed = [
+                'id' => $aUser['id'],
+                'time' => time()
+            ];
+            $strToken = JWT::encode($aSeed, $strJwtKey);
         } catch (\Exception $e) {
             throw new OperateFailedException('register|jwt_token_encode_failed|key:' . $strJwtKey . '|payload:' . json_encode($aUser) . '|internal_error:' . $e->getMessage());
         }
@@ -83,8 +82,8 @@ class Unified_RegisterController extends BaseController
         }
         // 返回用户数据+token+权限
         return Response::apiSuccess([
-            'user'          => $aData,
-            'unified_token' => $strToken
+            'unified_token' => $strToken,
+            'user'          => $aUser,
         ]);
     }
 }
