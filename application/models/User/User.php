@@ -26,7 +26,7 @@ class UserModel extends BaseModel
      * @return array
      * @throws CoreException
      */
-    public static function getUser(array $aQuery, int $page = 0, int $length = 0)
+    public static function getUser(array $aQuery = [], int $page = 0, int $length = 0)
     {
         return self::select(['*'], $aQuery, [
             'page' => $page,

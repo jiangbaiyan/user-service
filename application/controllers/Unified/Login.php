@@ -11,7 +11,9 @@ use Firebase\JWT\JWT;
 use Nos\Comm\Config;
 use Nos\Comm\Redis;
 use Nos\Comm\Validator;
+use Nos\Exception\CoreException;
 use Nos\Exception\OperateFailedException;
+use Nos\Exception\ParamValidateFailedException;
 use Nos\Exception\UnauthorizedException;
 use Nos\Http\Request;
 use Nos\Http\Response;
@@ -26,8 +28,13 @@ class Unified_LoginController extends BaseController
      */
     const REDIS_KEY_JWT_TOKEN = 'jwt_token_';
 
+
     /**
-     * 业务逻辑
+     * 统一登录
+     * @throws OperateFailedException
+     * @throws UnauthorizedException
+     * @throws CoreException
+     * @throws ParamValidateFailedException
      */
     public function indexAction()
     {
