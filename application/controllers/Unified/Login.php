@@ -47,6 +47,9 @@ class Unified_LoginController extends BaseController
                 throw new UnauthorizedException("login|token:{$strToken}_invalid");
             }
             $aUser = UserModel::getUserById($nUserId);
+            if (!$aUser) {
+                throw new UnauthorizedException("login|user:{$nUserId}_not_exist");
+            }
         } else { // 没有token，需重新登录
             Validator::make($aParams = Request::all(), [
                 'email' => 'email|required',
