@@ -38,7 +38,8 @@ class Unified_RegisterController extends BaseController
     {
         Validator::make($aParams = Request::all(), [
             'email' => 'required|email',
-            'password' => 'required'
+            'password' => 'required',
+            'callback_url' => 'required'
         ]);
         $strEmail    = $aParams['email'];
         $strPassword = $aParams['password'];
@@ -83,9 +84,13 @@ class Unified_RegisterController extends BaseController
         if (!$bool) {
             throw new OperateFailedException('register|redis_set_token_failed');
         }
-        // 发邮件
-        $strActivateCallback = 'http://152.136.125.67:9600/unified/callback?id=' . $aUser['id'];
+        // 获取回调配置
+        $aHttpConfig = Config::get('http.ini');
+        $strHost = $aHttpConfig['host'];
+        $strParams = base64_encode($aUser['id'] . '_' . $aParams['callback_url']);
+        $strActivateCallback = $strHost . '/unified/callback?data=' . $strParams;
         $strContent = "请点击该链接激活您的账号：\n" . $strActivateCallback;
+        // 发邮件
         Email::send($strEmail, '请激活您的用户账号', $strContent);
         Db::commit();
         // 返回token

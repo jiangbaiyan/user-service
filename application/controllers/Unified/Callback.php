@@ -8,9 +8,10 @@
  */
 
 use Nos\Comm\Validator;
+use Nos\Exception\CoreException;
 use Nos\Exception\OperateFailedException;
+use Nos\Exception\ParamValidateFailedException;
 use Nos\Http\Request;
-use Nos\Http\Response;
 use User\UserModel;
 
 class Unified_CallbackController extends BaseController
@@ -18,23 +19,29 @@ class Unified_CallbackController extends BaseController
 
     /**
      * 激活用户
+     * @throws OperateFailedException
+     * @throws CoreException
+     * @throws ParamValidateFailedException
      */
     public function indexAction()
     {
         Validator::make($aParams = Request::all(), [
-            'id' => 'required|numeric'
+            'data' => 'required|numeric'
         ]);
-        $aUser = UserModel::getUserById($aParams['id']);
+        $strData = base64_decode($aParams['data']);
+        list($nId, $callbackUrl) = explode('_', $strData);
+        $aUser = UserModel::getUserById($nId);
         if (empty($aUser)) {
-            throw new OperateFailedException("email_callback|user_id:{$aParams['id']}_not_exist");
+            throw new OperateFailedException("email_callback|user_id:{$nId}_not_exist");
         }
         if (!UserModel::update([
             'is_activate' => UserModel::ACTIVATE
         ], [
-            ['id', '=', $aParams['id']]
+            ['id', '=', $nId]
         ])) {
             throw new OperateFailedException('email_callback|update_active_status_failed');
         }
-        Response::apiSuccess();
+        header('Location: ' . $callbackUrl);
+        exit;
     }
 }
