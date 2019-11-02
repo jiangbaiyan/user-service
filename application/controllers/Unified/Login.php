@@ -50,10 +50,18 @@ class Unified_LoginController extends BaseController
             if (!$aUser) {
                 throw new UnauthorizedException("login|user:{$nUserId}_not_exist");
             }
-            Response::apiSuccess([
-                'unified_token' => $strToken,
-                'user'          => $aUser
-            ]);
+            // 如果未激活，告诉客户端，需要做对应跳转
+            if ($aUser['is_activate'] == UserModel::NOT_ACTIVATE) {
+                Response::apiSuccess([
+                    'is_activate'   => UserModel::NOT_ACTIVATE,
+                    'unified_token' => '',
+                ]);
+            } else {
+                Response::apiSuccess([
+                    'is_activate'   => UserModel::ACTIVATE,
+                    'unified_token' => $strToken,
+                ]);
+            }
         } else { // 没有token，需重新登录
             Validator::make($aParams = Request::all(), [
                 'email' => 'email|required',
@@ -63,6 +71,13 @@ class Unified_LoginController extends BaseController
             $aUser = UserModel::getUserByEmail($strEmail);
             if (empty($aUser)) {
                 throw new OperateFailedException("login|user:{$strEmail}_not_registered");
+            }
+            // 如果未激活，不返回token
+            if ($aUser['is_activate'] == UserModel::NOT_ACTIVATE) {
+                Response::apiSuccess([
+                    'is_activate'   => UserModel::NOT_ACTIVATE,
+                    'unified_token' => '',
+                ]);
             }
             // 取出数据库中的密码
             $strBackPassword = $aUser['password'];
@@ -90,6 +105,7 @@ class Unified_LoginController extends BaseController
                 throw new OperateFailedException('login|redis_set_token_failed');
             }
             Response::apiSuccess([
+                'is_activate'   => UserModel::ACTIVATE,
                 'unified_token' => $strToken
             ]);
         }

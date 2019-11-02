@@ -57,7 +57,8 @@ class Unified_RegisterController extends BaseController
         $aInsert = [
             'email' => $strEmail,
             'password' => md5($strAppId . $strPassword),
-            'resource_id' => $aResource['id']
+            'resource_id' => $aResource['id'],
+            'is_activate' => UserModel::NOT_ACTIVATE
         ];
         Db::beginTransaction();
         // 入库
@@ -83,7 +84,7 @@ class Unified_RegisterController extends BaseController
             throw new OperateFailedException('register|redis_set_token_failed');
         }
         // 发邮件
-        $strActivateCallback = 'http://152.136.125.67:9600/unified/callback';
+        $strActivateCallback = 'http://152.136.125.67:9600/unified/callback?id=' . $aUser['id'];
         $strContent = "请点击该链接激活您的账号：\n" . $strActivateCallback;
         Email::send($strEmail, '请激活您的用户账号', $strContent);
         Db::commit();

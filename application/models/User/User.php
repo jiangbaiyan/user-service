@@ -18,6 +18,9 @@ class UserModel extends BaseModel
 
     public static $table = 'user';
 
+    const NOT_ACTIVATE = 0; // 未激活
+    const ACTIVATE     = 1; // 已激活
+
     /**
      * 查询用户列表
      * @param array $aQuery
