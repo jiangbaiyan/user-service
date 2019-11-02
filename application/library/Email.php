@@ -28,10 +28,11 @@ class Email
     public static function send(string $strSendTo, string $strTitle, string $strContent)
     {
         try {
-            $objTrans = self::getTransInstance();
-            $objMailer = new Swift_Mailer($objTrans);
+            $objMailer = self::getMailerInstance();
             $objMessage = new Swift_Message($strTitle);
-            $objMessage->setFrom(self::$strSendFrom)->setTo($strSendTo)->setBody($strContent);
+            $objMessage->setFrom(self::$strSendFrom)
+                ->setTo($strSendTo)
+                ->setBody($strContent);
             return $objMailer->send($objMessage);
         } catch (\Exception $e) {
             throw new OperateFailedException('mail|send_mail_failed|msg:' . $e->getMessage());
@@ -44,7 +45,7 @@ class Email
      * @return array|mixed|Swift_SmtpTransport
      * @throws CoreException
      */
-    private static function getTransInstance()
+    private static function getMailerInstance()
     {
         $aMailConfig = Config::get('mail.ini');
         $strHost     = $aMailConfig['host'];
@@ -52,13 +53,14 @@ class Email
         $strUserName = $aMailConfig['username'];
         $strPassword = $aMailConfig['password'];
         $strPoolKey = $strHost . $strPort . $strUserName . $strPassword;
-        $objTransport = Pool::get($strPoolKey);
-        if (empty($objTransport)) {
+        $objMailer = Pool::get($strPoolKey);
+        if (empty($objMailer)) {
             $objTransport = new Swift_SmtpTransport($strHost, $strPort, 'ssl');
             $objTransport->setUsername($strUserName)->setPassword($strPassword);
-            Pool::set($strPoolKey, $objTransport);
+            $objMailer = new Swift_Mailer($objTransport);
+            Pool::set($strPoolKey, $objMailer);
         }
         self::$strSendFrom = $strUserName;
-        return $objTransport;
+        return $objMailer;
     }
 }
