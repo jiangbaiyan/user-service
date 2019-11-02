@@ -10,6 +10,7 @@
 namespace User;
 
 use Nos\Base\BaseModel;
+use Nos\Comm\Redis;
 use Nos\Exception\CoreException;
 use Nos\Exception\OperateFailedException;
 

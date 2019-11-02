@@ -26,7 +26,7 @@ class Unified_LoginController extends BaseController
     /**
      * redis中token的key前缀
      */
-    const REDIS_KEY_JWT_TOKEN = 'jwt_token_';
+    const REDIS_KEY_UNIFIED_TOKEN = 'unified_token_';
 
 
     /**
@@ -42,7 +42,7 @@ class Unified_LoginController extends BaseController
         // 若请求中有token，检验token并返回用户数据
         if (!empty($aParams['unified_token'])) {
             $strToken = $aParams['unified_token'];
-            $nUserId = Redis::getInstance()->get(self::REDIS_KEY_JWT_TOKEN . $strToken);
+            $nUserId = Redis::getInstance()->get(self::REDIS_KEY_UNIFIED_TOKEN . $strToken);
             if (!$nUserId) {
                 throw new UnauthorizedException("login|token:{$strToken}_invalid");
             }
@@ -50,6 +50,10 @@ class Unified_LoginController extends BaseController
             if (!$aUser) {
                 throw new UnauthorizedException("login|user:{$nUserId}_not_exist");
             }
+            Response::apiSuccess([
+                'unified_token' => $strToken,
+                'user'          => $aUser
+            ]);
         } else { // 没有token，需重新登录
             Validator::make($aParams = Request::all(), [
                 'email' => 'email|required',
@@ -78,18 +82,16 @@ class Unified_LoginController extends BaseController
                 ];
                 $strToken = JWT::encode($aSeed, $strJwtKey);
             } catch (\Exception $e) {
-                throw new OperateFailedException('login|jwt_token_encode_failed|key:' . $strJwtKey . '|payload:' . json_encode($aUser) . '|internal_error:' . $e->getMessage());
+                throw new OperateFailedException('login|unified_token_encode_failed|key:' . $strJwtKey . '|payload:' . json_encode($aUser) . '|internal_error:' . $e->getMessage());
             }
             // token一个月过期
-            $bool = Redis::getInstance()->set(self::REDIS_KEY_JWT_TOKEN . $strToken, $aUser['id'], 2592000);
+            $bool = Redis::getInstance()->set(self::REDIS_KEY_UNIFIED_TOKEN. $strToken, $aUser['id'], 2592000);
             if (!$bool) {
                 throw new OperateFailedException('login|redis_set_token_failed');
             }
+            Response::apiSuccess([
+                'unified_token' => $strToken
+            ]);
         }
-        // 统一返回
-        Response::apiSuccess([
-            'unified_token' => $strToken,
-            'user' => $aUser,
-        ]);
     }
 }

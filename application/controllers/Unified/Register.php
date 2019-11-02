@@ -9,6 +9,7 @@
 
 use Firebase\JWT\JWT;
 use Nos\Comm\Config;
+use Nos\Comm\Db;
 use Nos\Comm\Validator;
 use Nos\Exception\CoreException;
 use Nos\Exception\OperateFailedException;
@@ -25,7 +26,7 @@ class Unified_RegisterController extends BaseController
     /**
      * redis中token的key前缀
      */
-    const REDIS_KEY_JWT_TOKEN = 'jwt_token_';
+    const REDIS_KEY_UNIFIED_TOKEN = 'unified_token_';
 
     /**
      * 统一注册
@@ -58,6 +59,7 @@ class Unified_RegisterController extends BaseController
             'password' => md5($strAppId . $strPassword),
             'resource_id' => $aResource['id']
         ];
+        Db::beginTransaction();
         // 入库
         if (!UserModel::createUser($aInsert)) {
             throw new OperateFailedException('register|created_user_failed|data:' . json_encode($aInsert));
@@ -73,17 +75,21 @@ class Unified_RegisterController extends BaseController
             ];
             $strToken = JWT::encode($aSeed, $strJwtKey);
         } catch (\Exception $e) {
-            throw new OperateFailedException('register|jwt_token_encode_failed|key:' . $strJwtKey . '|payload:' . json_encode($aUser) . '|internal_error:' . $e->getMessage());
+            throw new OperateFailedException('register|unified_token_encode_failed|key:' . $strJwtKey . '|payload:' . json_encode($aUser) . '|internal_error:' . $e->getMessage());
         }
         // token一个月过期
-        $bool = Redis::getInstance()->set(self::REDIS_KEY_JWT_TOKEN . $strToken, $aUser['id'], 2592000);
+        $bool = Redis::getInstance()->set(self::REDIS_KEY_UNIFIED_TOKEN . $strToken, $aUser['id'], 2592000);
         if (!$bool) {
             throw new OperateFailedException('register|redis_set_token_failed');
         }
-        // 返回用户数据+token+权限
-        return Response::apiSuccess([
-            'unified_token' => $strToken,
-            'user'          => $aUser,
+        // 发邮件
+        $strActivateCallback = 'http://152.136.125.67:9600/unified/callback';
+        $strContent = '请点击该链接激活您的账号:' . $strActivateCallback;
+        Email::send($strEmail, '请激活您的用户账号', $strContent);
+        Db::commit();
+        // 返回token
+        Response::apiSuccess([
+            'unified_token' => $strToken
         ]);
     }
 }

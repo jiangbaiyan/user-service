@@ -30,7 +30,8 @@
     "ext-mbstring": "*",
     "ext-pdo": "*",
     "firebase/php-jwt": "^5.0",
-    "jiangbaiyan/nos-framework": "dev-master"
+    "jiangbaiyan/nos-framework": "dev-master",
+    "swiftmailer/swiftmailer": "^6.0"
   },
   "scripts": {
     "post-autoload-dump": [
