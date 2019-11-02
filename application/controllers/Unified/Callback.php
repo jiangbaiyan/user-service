@@ -17,6 +17,8 @@ use User\UserModel;
 class Unified_CallbackController extends BaseController
 {
 
+    public $auth = false;
+
     /**
      * 激活用户
      * @throws OperateFailedException
@@ -26,7 +28,7 @@ class Unified_CallbackController extends BaseController
     public function indexAction()
     {
         Validator::make($aParams = Request::all(), [
-            'data' => 'required|numeric'
+            'data' => 'required'
         ]);
         $strData = base64_decode($aParams['data']);
         list($nId, $callbackUrl) = explode('_', $strData);
