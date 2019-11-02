@@ -54,7 +54,7 @@ class Email
         $strPoolKey = $strHost . $strPort . $strUserName . $strPassword;
         $objTransport = Pool::get($strPoolKey);
         if (empty($objTransport)) {
-            $objTransport = new Swift_SmtpTransport($strHost, $strPort);
+            $objTransport = new Swift_SmtpTransport($strHost, $strPort, 'ssl');
             $objTransport->setUsername($strUserName)->setPassword($strPassword);
             Pool::set($strPoolKey, $objTransport);
         }

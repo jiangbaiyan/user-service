@@ -84,7 +84,7 @@ class Unified_RegisterController extends BaseController
         }
         // 发邮件
         $strActivateCallback = 'http://152.136.125.67:9600/unified/callback';
-        $strContent = '请点击该链接激活您的账号:' . $strActivateCallback;
+        $strContent = "请点击该链接激活您的账号：\n" . $strActivateCallback;
         Email::send($strEmail, '请激活您的用户账号', $strContent);
         Db::commit();
         // 返回token
