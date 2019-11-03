@@ -31,6 +31,6 @@ class User_CreateController extends BaseController
             'data' => 'required|array'
         ]);
         UserModel::createUser($aParams['data']);
-        return Response::apiSuccess('创建成功');
+        return Response::apiSuccess();
     }
 }

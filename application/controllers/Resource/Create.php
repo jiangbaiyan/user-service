@@ -53,7 +53,7 @@ class Resource_CreateController extends BaseController
             'full_key' => $strFullKey
         ];
         ResourceModel::createResource($aInsert);
-        Response::apiSuccess('创建成功');
+        Response::apiSuccess();
     }
 
 

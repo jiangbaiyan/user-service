@@ -30,6 +30,6 @@ class User_DeleteController extends BaseController
             'query' => 'required|array'
         ]);
         UserModel::deleteUser($aParams['query']);
-        return Response::apiSuccess('删除成功');
+        return Response::apiSuccess();
     }
 }
