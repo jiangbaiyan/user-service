@@ -10,8 +10,10 @@
 namespace User;
 
 use Nos\Base\BaseModel;
+use Nos\Comm\Redis;
 use Nos\Exception\CoreException;
 use Nos\Exception\OperateFailedException;
+use Nos\Exception\UnauthorizedException;
 
 class UserModel extends BaseModel
 {
@@ -20,6 +22,12 @@ class UserModel extends BaseModel
 
     const NOT_ACTIVATE = 0; // 未激活
     const ACTIVATE     = 1; // 已激活
+
+    /**
+     * redis中token的key前缀
+     */
+    const REDIS_KEY_UNIFIED_TOKEN = 'unified_token_';
+
 
     /**
      * 查询用户列表
@@ -66,6 +74,23 @@ class UserModel extends BaseModel
     }
 
     /**
+     * 根据统一token获取用户信息
+     * @param string $strToken
+     * @return array
+     * @throws CoreException
+     * @throws UnauthorizedException
+     */
+    public static function getUserByUnifiedToken(string $strToken)
+    {
+        $nUserId = Redis::getInstance()->get(self::REDIS_KEY_UNIFIED_TOKEN . $strToken);
+        if (empty($nUserId)) {
+            throw new UnauthorizedException("unified_get_user|token_invalid");
+        }
+        $aUser = self::getUserById($nUserId);
+        return $aUser;
+    }
+
+    /**
      * 创建用户
      * $aData示例：
      * [
@@ -105,17 +130,19 @@ class UserModel extends BaseModel
 
     /**
      * 更新用户
-     * @param array $aQuery 要更新的记录行
+     * @param int $nId 要更新的记录id
      * @param array $aData 更新的数据
      * @return int
      * @throws CoreException
      * @throws OperateFailedException
      */
-    public static function updateUser(array $aQuery, array $aData)
+    public static function updateUserById(int $nId, array $aData)
     {
-        $nRows = self::update($aData, $aQuery);
+        $nRows = self::update($aData, [
+            ['id', '=', $nId]
+        ]);
         if (!$nRows) {
-            throw new OperateFailedException('userModel|update_failed|params:' . json_encode($aData) . '|query:' . json_encode($aQuery));
+            throw new OperateFailedException('userModel|update_failed|params:' . json_encode($aData) . '|id:' . $nId);
         }
         return $nRows;
     }

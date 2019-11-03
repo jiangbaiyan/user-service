@@ -3,7 +3,7 @@
 use Nos\Comm\Validator;
 use Nos\Exception\CoreException;
 use Nos\Exception\OperateFailedException;
-use Nos\Exception\ParamValidateFailedException;
+use Nos\Exception\ParamValidateFailedException as ParamValidateFailedExceptionAlias;
 use Nos\Http\Request;
 use Nos\Http\Response;
 use User\UserModel;
@@ -23,15 +23,15 @@ class User_UpdateController extends BaseController
      * 更新用户
      * @throws CoreException
      * @throws OperateFailedException
-     * @throws ParamValidateFailedException
+     * @throws ParamValidateFailedExceptionAlias
      */
     public function indexAction()
     {
         Validator::make($aParams = Request::all(), [
-            'data' => 'required',
-            'query' => 'required|array'
+            'id' => 'required|numeric',
+            'data' => 'required'
         ]);
-        UserModel::updateUser($aParams['query'], $aParams['data']);
-        Response::apiSuccess('更新成功');
+        UserModel::updateUserById($aParams['id'], $aParams['data']);
+        Response::apiSuccess();
     }
 }
