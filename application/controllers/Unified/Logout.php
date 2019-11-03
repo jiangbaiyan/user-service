@@ -14,7 +14,7 @@ use Nos\Http\Request;
 use Nos\Comm\Redis;
 use Nos\Http\Response;
 
-class Unified_Logout extends BaseController
+class Unified_LogoutController extends BaseController
 {
 
     /**

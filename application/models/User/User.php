@@ -32,14 +32,15 @@ class UserModel extends BaseModel
     /**
      * 查询用户列表
      * @param array $aQuery
+     * @param array $aField
      * @param int $page
      * @param int $length
      * @return array
      * @throws CoreException
      */
-    public static function getUser(array $aQuery = [], int $page = 0, int $length = 0)
+    public static function getUser(array $aQuery = [], array $aField = ['*'], int $page = 0, int $length = 0)
     {
-        return self::select(['*'], $aQuery, [
+        return self::select($aField, $aQuery, [
             'page' => $page,
             'length' => $length
         ]);
@@ -48,16 +49,17 @@ class UserModel extends BaseModel
     /**
      * 通过用户id获取用户
      * @param int $nId
+     * @param array $aField
      * @param int $page
      * @param int $length
      * @return array
      * @throws CoreException
      */
-    public static function getUserById(int $nId, int $page = 0, int $length = 0)
+    public static function getUserById(int $nId, array $aField = ['*'], int $page = 0, int $length = 0)
     {
         return self::getUser([
             ['id', '=', $nId]
-        ]);
+        ], $aField);
     }
 
     /**
@@ -76,17 +78,18 @@ class UserModel extends BaseModel
     /**
      * 根据统一token获取用户信息
      * @param string $strToken
+     * @param array $aField
      * @return array
      * @throws CoreException
      * @throws UnauthorizedException
      */
-    public static function getUserByUnifiedToken(string $strToken)
+    public static function getUserByUnifiedToken(string $strToken, array $aField = ['*'])
     {
         $nUserId = Redis::getInstance()->get(self::REDIS_KEY_UNIFIED_TOKEN . $strToken);
         if (empty($nUserId)) {
             throw new UnauthorizedException("unified_get_user|token_invalid");
         }
-        $aUser = self::getUserById($nUserId);
+        $aUser = self::getUserById($nUserId, $aField);
         return $aUser;
     }
 

@@ -33,7 +33,7 @@ class User_QueryController extends BaseController
         $page = $aParams['page'] ?? 0;
         $length = $aParams['length'] ?? 0;
         $query = $aParams['query'] ?? [];
-        $aData = UserModel::getUser($query, $page, $length);
+        $aData = UserModel::getUser($query, ['*'], $page, $length);
         return Response::apiSuccess($aData);
     }
 }

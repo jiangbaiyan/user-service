@@ -37,7 +37,9 @@ class Unified_User_GetController extends BaseController
             'unified_token' => 'required'
         ]);
         $strToken = $aParams['unified_token'];
-        $aUser = UserModel::getUserByUnifiedToken($strToken);
+        $aUser = UserModel::getUserByUnifiedToken($strToken, [
+            'id', 'email', 'is_activate', 'created_at', 'updated_at', 'is_delete'
+        ]);
         Response::apiSuccess($aUser);
     }
 }
