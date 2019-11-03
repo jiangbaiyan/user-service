@@ -87,7 +87,7 @@ class UserModel extends BaseModel
     {
         $nUserId = Redis::getInstance()->get(self::REDIS_KEY_UNIFIED_TOKEN . $strToken);
         if (empty($nUserId)) {
-            throw new UnauthorizedException("unified_get_user|token_invalid");
+            throw new UnauthorizedException("user_model|token:{$strToken}_invalid");
         }
         $aUser = self::getUserById($nUserId, $aField);
         return $aUser;
@@ -109,7 +109,7 @@ class UserModel extends BaseModel
     {
         $nRows = self::insert($aData);
         if (!$nRows) {
-            throw new OperateFailedException('userModel|create_batch_failed|data:' . json_encode($aData));
+            throw new OperateFailedException('user_model|create_batch_failed|data:' . json_encode($aData));
         }
         return $nRows;
     }
@@ -125,7 +125,7 @@ class UserModel extends BaseModel
     {
         $nRows = self::delete($aQuery);
         if (!$nRows) {
-            throw new OperateFailedException('userModel|delete_failed|query:' . json_encode($aQuery));
+            throw new OperateFailedException('user_model|delete_failed|query:' . json_encode($aQuery));
         }
         return $nRows;
     }
@@ -145,7 +145,7 @@ class UserModel extends BaseModel
             ['id', '=', $nId]
         ]);
         if (!$nRows) {
-            throw new OperateFailedException('userModel|update_failed|params:' . json_encode($aData) . '|id:' . $nId);
+            throw new OperateFailedException('user_model|update_failed|params:' . json_encode($aData) . '|id:' . $nId);
         }
         return $nRows;
     }

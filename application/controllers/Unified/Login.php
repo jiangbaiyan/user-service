@@ -42,13 +42,9 @@ class Unified_LoginController extends BaseController
         // 若请求中有token，检验token并返回用户数据
         if (!empty($aParams['unified_token'])) {
             $strToken = $aParams['unified_token'];
-            $nUserId = Redis::getInstance()->get(self::REDIS_KEY_UNIFIED_TOKEN . $strToken);
-            if (!$nUserId) {
-                throw new UnauthorizedException("login|token:{$strToken}_invalid");
-            }
-            $aUser = UserModel::getUserById($nUserId);
-            if (!$aUser) {
-                throw new UnauthorizedException("login|user:{$nUserId}_not_exist");
+            $aUser = UserModel::getUserByUnifiedToken($strToken);
+            if (empty($aUser)) {
+                throw new UnauthorizedException("login|user_not_exist");
             }
             // 如果未激活，告诉客户端，需要做对应跳转
             if ($aUser['is_activate'] == UserModel::NOT_ACTIVATE) {
@@ -81,7 +77,7 @@ class Unified_LoginController extends BaseController
             }
             // 取出数据库中的密码
             $strBackPassword = $aUser['password'];
-            $strAppId = $aParams['appId'];
+            $strAppId        = $aParams['appId'];
             // 将前端传过来的密码进行同样的加密运算
             $strFrontPassword = md5($strAppId . $aParams['password']);
             // 判断二者是否相等
