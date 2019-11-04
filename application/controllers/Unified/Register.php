@@ -49,6 +49,14 @@ class Unified_RegisterController extends BaseController
         if ($aUser) {
             throw new OperateFailedException("register|email:{$strEmail}_has_been_registered");
         }
+        $strName = '';
+        if (!empty($aParams['name'])) {
+            $strName = $aParams['name'];
+            $aUser = UserModel::getUserByName($strName);
+            if ($aUser) {
+                throw new OperateFailedException("register|name:{$strName}_has_been_registered");
+            }
+        }
         // 查询该appId是否已经在资源节点中注册
         $aResource = ResourceModel::getResourceByFullKey($aParams['appId']);
         if (empty($aResource)) {
@@ -58,6 +66,7 @@ class Unified_RegisterController extends BaseController
         $aInsert = [
             'email' => $strEmail,
             'password' => md5($strAppId . $strPassword),
+            'name' => $strName,
             'resource_id' => $aResource['id'],
             'is_activate' => UserModel::NOT_ACTIVATE
         ];

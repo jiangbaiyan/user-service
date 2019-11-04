@@ -59,20 +59,39 @@ class UserModel extends BaseModel
     {
         return self::getUser([
             ['id', '=', $nId]
-        ], $aField);
+        ], $aField, $page, $length);
     }
 
     /**
      * 通过邮箱获取用户
      * @param string $strEmail
+     * @param array $aField
+     * @param int $page
+     * @param int $length
      * @return array
      * @throws CoreException
      */
-    public static function getUserByEmail(string $strEmail)
+    public static function getUserByEmail(string $strEmail, array $aField = ['*'], int $page = 0, int $length = 0)
     {
         return self::getUser([
             ['email', '=', $strEmail]
-        ]);
+        ], $aField, $page, $length);
+    }
+
+    /**
+     * 通过用户名获取用户
+     * @param string $strName
+     * @param array $aField
+     * @param int $page
+     * @param int $length
+     * @return array
+     * @throws CoreException
+     */
+    public static function getUserByName(string $strName, array $aField = ['*'], int $page = 0, int $length = 0)
+    {
+        return self::getUser([
+            ['name', '=', $strName]
+        ], $aField, $page, $length);
     }
 
     /**
