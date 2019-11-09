@@ -30,7 +30,8 @@ class Unified_User_UpdateController extends BaseController
      * 允许修改的字段
      */
     const ALLOWED_UPDATED_FIELD = [
-        'password'
+        'password',
+        'name'
     ];
 
 
@@ -53,7 +54,7 @@ class Unified_User_UpdateController extends BaseController
             throw new UnauthorizedException("unified_update_user|token_invalid");
         }
         foreach ($aParams['data'] as $strField => &$strValue) {
-            // 暂时只允许修改密码
+            // 允许修改密码和昵称
             if (!in_array($strField, self::ALLOWED_UPDATED_FIELD)) {
                 throw new OperateFailedException("字段{$strField}不允许修改");
             }
