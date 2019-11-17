@@ -16,13 +16,8 @@ use Nos\Exception\UnauthorizedException;
 use Nos\Http\Response;
 use User\UserModel;
 
-class Unified_User_GetController extends BaseController
+class Unified_User_QueryController extends BaseController
 {
-
-    /**
-     * redis中token的key前缀
-     */
-    const REDIS_KEY_UNIFIED_TOKEN = 'unified_token_';
 
 
     /**

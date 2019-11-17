@@ -46,56 +46,52 @@ class Unified_RegisterController extends BaseController
         $strAppId    = $aParams['appId'];
         // 防止重复注册
         $aUser = UserModel::getUserByEmail($strEmail);
-        if ($aUser) {
+        if ($aUser['total']) {
             throw new OperateFailedException("register|email:{$strEmail}_has_been_registered");
         }
         // 查询该appId是否已经在资源节点中注册
         $aResource = ResourceModel::getResourceByFullKey($aParams['appId']);
-        if (empty($aResource)) {
+        if (empty($aResource['total'])) {
             throw new OperateFailedException("register|{$strAppId}_was_not_registered_in_resource");
         }
+        $aResource   = $aResource['data'][0];
+        $nResourceId = $aResource['id'];
         // 组装插入数据
         $aInsert = [
-            'email' => $strEmail,
-            'password' => md5($strAppId . $strPassword),
-            'resource_id' => $aResource['id'],
+            'email'       => $strEmail,
+            'password'    => md5($strAppId . $strPassword),
+            'resource_id' => $nResourceId,
             'is_activate' => UserModel::NOT_ACTIVATE
         ];
         Db::beginTransaction();
         // 入库
-        if (!UserModel::createUser($aInsert)) {
-            throw new OperateFailedException('register|created_user_failed|data:' . json_encode($aInsert));
-        }
-        // 获取刚入库的用户
-        $aUser = UserModel::getUserByEmail($strEmail);
+        $nUserId = UserModel::createUser($aInsert);
         $strJwtKey = Config::get('application.ini')['jwt_key'];
         // 根据用户数据获取加密token
         try {
             $aSeed = [
-                'id' => $aUser['id'],
+                'id' => $nUserId,
                 'time' => time()
             ];
             $strToken = JWT::encode($aSeed, $strJwtKey);
         } catch (\Exception $e) {
-            throw new OperateFailedException('register|unified_token_encode_failed|key:' . $strJwtKey . '|payload:' . json_encode($aUser) . '|internal_error:' . $e->getMessage());
+            throw new OperateFailedException('register|unified_token_encode_failed|key:' . $strJwtKey . '|payload:' . json_encode($aSeed) . '|internal_error:' . $e->getMessage());
         }
         // token一个月过期
-        $bool = Redis::getInstance()->set(self::REDIS_KEY_UNIFIED_TOKEN . $strToken, $aUser['id'], 2592000);
+        $bool = Redis::getInstance()->set(self::REDIS_KEY_UNIFIED_TOKEN . $strToken, $nUserId, 2592000);
         if (!$bool) {
             throw new OperateFailedException('register|redis_set_token_failed');
         }
         // 获取回调配置
         $aHttpConfig = Config::get('http.ini');
-        $strHost = $aHttpConfig['host'];
-        $strParams = base64_encode($aUser['id'] . '_' . $aParams['callback_url']);
+        $strHost     = $aHttpConfig['host'];
+        $strParams   = base64_encode($nUserId . '_' . $aParams['callback_url']);
         $strActivateCallback = $strHost . '/unified/callback?data=' . $strParams;
-        $strContent = "请点击该链接激活您的账号：\n" . $strActivateCallback;
+        $strContent  = "请点击该链接激活您的账号：\n" . $strActivateCallback;
         // 发邮件
         Email::send($strEmail, '请激活您的用户账号', $strContent);
         Db::commit();
         // 返回token
-        Response::apiSuccess([
-            'unified_token' => $strToken
-        ]);
+        Response::apiSuccess(['unified_token' => $strToken]);
     }
 }

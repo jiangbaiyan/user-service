@@ -32,8 +32,8 @@ class Unified_CallbackController extends BaseController
         ]);
         $strData = base64_decode($aParams['data']);
         list($nId, $callbackUrl) = explode('_', $strData);
-        $aUser = UserModel::getUserById($nId);
-        if (empty($aUser)) {
+        $aUser = UserModel::getUserById((int)$nId);
+        if (empty($aUser['total'])) {
             throw new OperateFailedException("email_callback|user_id:{$nId}_not_exist");
         }
         if (!UserModel::update([
