@@ -74,7 +74,7 @@ class Resource_CreateController extends BaseController
             if (!$aNode) {
                 throw new OperateFailedException("resource|parent_node:{$nParentResourceId}_not_exists");
             }
-            $strCurKey = $aNode['cur_key'];
+            $strCurKey         = $aNode['cur_key'];
             $nParentResourceId = $aNode['parent_resource_id'];
             // 将节点名放到数组的前面，这样层级高的节点就在数组的前面
             array_unshift($aQueue, $strCurKey);

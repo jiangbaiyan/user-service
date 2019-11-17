@@ -13,6 +13,7 @@ use Nos\Exception\ParamValidateFailedException;
 use Nos\Http\Request;
 use Nos\Http\Response;
 use User\UserModel;
+use Resource\ResourceModel;
 
 class User_QueryController extends BaseController
 {
@@ -30,10 +31,16 @@ class User_QueryController extends BaseController
             'length' => 'integer',
             'query'   => 'array'
         ]);
-        $page = $aParams['page'] ?? 0;
+        $page   = $aParams['page'] ?? 0;
         $length = $aParams['length'] ?? 0;
-        $query = $aParams['query'] ?? [];
-        $aData = UserModel::getUser($query, ['*'], $page, $length);
+        $query  = $aParams['query'] ?? [];
+        $aData  = UserModel::getUser($query, ['*'], $page, $length);
+        // 查询业务线
+        foreach ($aData['data'] as $nKey => &$aValue) {
+            $aResource = ResourceModel::getResourceById($aValue['resource_id'])['data'];
+            $aValue['resource'] = $aResource[0]['full_key'];
+            unset($aValue['resource_id']);
+        }
         return Response::apiSuccess($aData);
     }
 }

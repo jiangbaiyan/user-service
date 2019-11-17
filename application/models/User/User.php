@@ -126,25 +126,27 @@ class UserModel extends BaseModel
      */
     public static function createUser(array $aData)
     {
-        $nRows = self::insert($aData);
-        if (!$nRows) {
+        $nId = self::insert($aData);
+        if (!$nId) {
             throw new OperateFailedException('user_model|create_batch_failed|data:' . json_encode($aData));
         }
-        return $nRows;
+        return $nId;
     }
 
     /**
      * 删除用户
-     * @param array $aQuery
+     * @param int $nId 删除的用户id
      * @return int
      * @throws CoreException
      * @throws OperateFailedException
      */
-    public static function deleteUser(array $aQuery)
+    public static function deleteUserById(int $nId)
     {
-        $nRows = self::delete($aQuery);
+        $nRows = self::delete([
+            ['id', '=', $nId]
+        ]);
         if (!$nRows) {
-            throw new OperateFailedException('user_model|delete_failed|query:' . json_encode($aQuery));
+            throw new OperateFailedException('user_model|delete_failed|id:' . json_encode($nId));
         }
         return $nRows;
     }

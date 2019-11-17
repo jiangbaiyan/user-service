@@ -43,9 +43,10 @@ class Unified_LoginController extends BaseController
         if (!empty($aParams['unified_token'])) {
             $strToken = $aParams['unified_token'];
             $aUser = UserModel::getUserByUnifiedToken($strToken);
-            if (empty($aUser)) {
+            if (empty($aUser['total'])) {
                 throw new UnauthorizedException("login|user_not_exist");
             }
+            $aUser = $aUser['data'];
             // 如果未激活，告诉客户端，需要做对应跳转
             if ($aUser['is_activate'] == UserModel::NOT_ACTIVATE) {
                 Response::apiSuccess([
@@ -65,9 +66,10 @@ class Unified_LoginController extends BaseController
             ]);
             $strEmail = $aParams['email'];
             $aUser = UserModel::getUserByEmail($strEmail);
-            if (empty($aUser)) {
+            if (empty($aUser['total'])) {
                 throw new OperateFailedException("login|user:{$strEmail}_not_registered");
             }
+            $aUser = $aUser['data'];
             // 如果未激活，不返回token
             if ($aUser['is_activate'] == UserModel::NOT_ACTIVATE) {
                 Response::apiSuccess([
