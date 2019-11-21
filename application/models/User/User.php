@@ -9,12 +9,12 @@
 
 namespace User;
 
-use Model;
+use CommonModel;
 use Nos\Comm\Redis;
 use Nos\Exception\CoreException;
 use Nos\Exception\UnauthorizedException;
 
-class UserModel extends Model
+class UserModel extends CommonModel
 {
 
     public static $table = 'user';

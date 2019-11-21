@@ -9,10 +9,10 @@
 
 namespace Resource;
 
-use Model;
+use CommonModel;
 use Nos\Exception\CoreException;
 
-class ResourceModel extends Model
+class ResourceModel extends CommonModel
 {
 
     public static $table = 'resource';

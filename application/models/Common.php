@@ -7,12 +7,11 @@
  * Time: 09:07 上午
  */
 
-
 use Nos\Base\BaseModel;
 use Nos\Exception\CoreException;
 use Nos\Exception\OperateFailedException;
 
-class Model extends BaseModel
+class CommonModel extends BaseModel
 {
 
     /**
