@@ -30,7 +30,7 @@ class User_CreateController extends BaseController
         Validator::make($aParams = Request::all(), [
             'data' => 'required|array'
         ]);
-        UserModel::createUser($aParams['data']);
+        UserModel::create($aParams['data']);
         return Response::apiSuccess();
     }
 }

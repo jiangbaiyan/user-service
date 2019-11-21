@@ -28,7 +28,7 @@ abstract class BaseController extends Controller_Abstract
 
 
     /**
-     * 接口鉴权函数
+     * 统一接口鉴权函数
      * @return bool
      * @throws CoreException
      * @throws ParamValidateFailedException

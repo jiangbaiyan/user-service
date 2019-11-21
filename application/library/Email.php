@@ -9,7 +9,6 @@
 
 use Nos\Comm\Config;
 use Nos\Comm\Pool;
-use Nos\Exception\CoreException;
 use Nos\Exception\OperateFailedException;
 
 class Email
@@ -43,7 +42,6 @@ class Email
     /**
      * 获取transport实例
      * @return array|mixed|Swift_SmtpTransport
-     * @throws CoreException
      */
     private static function getMailerInstance()
     {

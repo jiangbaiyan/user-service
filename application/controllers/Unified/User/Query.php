@@ -7,7 +7,6 @@
  * Time: 10:10
  */
 
-use Nos\Comm\Redis;
 use Nos\Comm\Validator;
 use Nos\Exception\CoreException;
 use Nos\Exception\ParamValidateFailedException;

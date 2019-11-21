@@ -32,17 +32,14 @@ class Unified_CallbackController extends BaseController
         ]);
         $strData = base64_decode($aParams['data']);
         list($nId, $callbackUrl) = explode('_', $strData);
-        $aUser = UserModel::getUserById((int)$nId);
+        $aUser = UserModel::getById((int)$nId);
         if (empty($aUser['total'])) {
             throw new OperateFailedException("email_callback|user_id:{$nId}_not_exist");
         }
-        if (!UserModel::update([
+        // 更新状态为已激活
+        UserModel::updateById($nId, [
             'is_activate' => UserModel::ACTIVATE
-        ], [
-            ['id', '=', $nId]
-        ])) {
-            throw new OperateFailedException('email_callback|update_active_status_failed');
-        }
+        ]);
         header('Location: ' . $callbackUrl);
         exit;
     }

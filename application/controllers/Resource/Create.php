@@ -52,7 +52,7 @@ class Resource_CreateController extends BaseController
             'cur_key'  => $strCurKey,
             'full_key' => $strFullKey
         ];
-        ResourceModel::createResource($aInsert);
+        ResourceModel::create($aInsert);
         Response::apiSuccess();
     }
 
@@ -70,7 +70,7 @@ class Resource_CreateController extends BaseController
         // 如果没有到最顶层节点，递归的获取节点名
         if (!empty($nParentResourceId)) {
             // 查询父节点名称
-            $aNode = ResourceModel::getResourceById($nParentResourceId);
+            $aNode = ResourceModel::getById($nParentResourceId);
             if (!$aNode) {
                 throw new OperateFailedException("resource|parent_node:{$nParentResourceId}_not_exists");
             }
