@@ -86,8 +86,8 @@ class UserModel extends CommonModel
         if (isset($aData['is_activate'])) {
             $aUpdate['is_activate'] = $aData['is_activate'];
         }
-        if (isset($aData['resource'])) {
-            $aResource = ResourceModel::getById($aData['resource_id'])['data'];
+        if (isset($aData['resource_id'])) {
+            $aResource = ResourceModel::getById((int)$aData['resource_id'])['data'];
             if (!$aResource) {
                 throw new ResourceNotFoundException("user_model|resource_id:{$aData['resource_id']}_not_found");
             }
