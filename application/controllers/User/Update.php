@@ -23,6 +23,7 @@ class User_UpdateController extends BaseController
      * @throws CoreException
      * @throws OperateFailedException
      * @throws ParamValidateFailedExceptionAlias
+     * @throws \Nos\Exception\ResourceNotFoundException
      */
     public function indexAction()
     {
@@ -30,7 +31,7 @@ class User_UpdateController extends BaseController
             'id' => 'required|numeric',
             'data' => 'required'
         ]);
-        UserModel::updateById($aParams['id'], $aParams['data']);
+        UserModel::updateUserById($aParams['id'], $aParams['data']);
         Response::apiSuccess();
     }
 }

@@ -12,7 +12,10 @@ namespace User;
 use CommonModel;
 use Nos\Comm\Redis;
 use Nos\Exception\CoreException;
+use Nos\Exception\OperateFailedException;
+use Nos\Exception\ResourceNotFoundException;
 use Nos\Exception\UnauthorizedException;
+use Resource\ResourceModel;
 
 class UserModel extends CommonModel
 {
@@ -60,6 +63,36 @@ class UserModel extends CommonModel
             throw new UnauthorizedException("user_model|token:{$strToken}_invalid");
         }
         return self::getById($nUserId, $aField);
+    }
+
+    /**
+     * 更新用户
+     * @param int $nId
+     * @param $aData
+     * @return int
+     * @throws CoreException
+     * @throws OperateFailedException
+     * @throws ResourceNotFoundException
+     */
+    public static function updateUserById(int $nId, $aData)
+    {
+        $aUpdate = [];
+        if (isset($aData['name'])) {
+            $aUpdate['name'] = $aData['name'];
+        }
+        if (isset($aData['email'])) {
+            $aUpdate['email'] = $aData['email'];
+        }
+        if (isset($aData['is_activate'])) {
+            $aUpdate['is_activate'] = $aData['is_activate'];
+        }
+        if (isset($aData['resource'])) {
+            $aResource = ResourceModel::getById($aData['resource_id'])['data'];
+            if (!$aResource) {
+                throw new ResourceNotFoundException("user_model|resource_id:{$aData['resource_id']}_not_found");
+            }
+        }
+        return self::updateById($nId, $aData);
     }
 
 }
