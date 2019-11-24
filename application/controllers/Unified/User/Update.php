@@ -17,7 +17,6 @@ use Nos\Exception\UnauthorizedException;
 use Nos\Http\Response;
 use User\UserModel;
 
-
 class Unified_User_UpdateController extends BaseController
 {
 
@@ -63,7 +62,7 @@ class Unified_User_UpdateController extends BaseController
                 $strValue = md5($aParams['appId'] . $strValue);
             }
         }
-        UserModel::updateUserById($nUserId, $aParams['data']);
+        UserModel::updateById($nUserId, $aParams['data']);
         Response::apiSuccess();
     }
 }

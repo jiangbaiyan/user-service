@@ -27,9 +27,9 @@ class User_DeleteController extends BaseController
     public function indexAction()
     {
         Validator::make($aParams = Request::all(), [
-            'query' => 'required|array'
+            'id' => 'required|numeric'
         ]);
-        UserModel::deleteUser($aParams['query']);
+        UserModel::deleteById($aParams['id']);
         return Response::apiSuccess();
     }
 }

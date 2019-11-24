@@ -1,4 +1,11 @@
 <?php
+/**
+ * 用户更新接口
+ * Created by PhpStorm.
+ * User: jiangbaiyan
+ * Date: 2019/10/27
+ * Time: 10:22 上午
+ */
 
 use Nos\Comm\Validator;
 use Nos\Exception\CoreException;
@@ -8,14 +15,6 @@ use Nos\Http\Request;
 use Nos\Http\Response;
 use User\UserModel;
 
-/**
- * 用户更新接口
- * Created by PhpStorm.
- * User: jiangbaiyan
- * Date: 2019/10/27
- * Time: 10:22 上午
- */
-
 class User_UpdateController extends BaseController
 {
 
@@ -24,6 +23,7 @@ class User_UpdateController extends BaseController
      * @throws CoreException
      * @throws OperateFailedException
      * @throws ParamValidateFailedExceptionAlias
+     * @throws \Nos\Exception\ResourceNotFoundException
      */
     public function indexAction()
     {

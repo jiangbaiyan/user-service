@@ -61,12 +61,13 @@ class Unified_RegisterController extends BaseController
         $aInsert = [
             'email'       => $strEmail,
             'password'    => md5($strAppId . $strPassword),
+            'name'        => $strName,
             'resource_id' => $nResourceId,
             'is_activate' => UserModel::NOT_ACTIVATE
         ];
         Db::beginTransaction();
         // 入库
-        $nUserId = UserModel::createUser($aInsert);
+        $nUserId = UserModel::create($aInsert);
         $strJwtKey = Config::get('application.ini')['jwt_key'];
         // 根据用户数据获取加密token
         try {
