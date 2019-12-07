@@ -15,7 +15,7 @@ use Nos\Http\Request;
 use Nos\Http\Response;
 use User\UserModel;
 
-class User_DeleteController extends BaseController
+class V1_User_DeleteController extends BaseController
 {
 
     /**

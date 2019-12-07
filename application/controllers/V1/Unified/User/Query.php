@@ -15,7 +15,7 @@ use Nos\Exception\UnauthorizedException;
 use Nos\Http\Response;
 use User\UserModel;
 
-class Unified_User_QueryController extends BaseController
+class V1_Unified_User_QueryController extends BaseController
 {
 
     /**

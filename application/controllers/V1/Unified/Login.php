@@ -20,7 +20,7 @@ use Nos\Http\Response;
 use User\UserModel;
 
 
-class Unified_LoginController extends BaseController
+class V1_Unified_LoginController extends BaseController
 {
 
     /**
