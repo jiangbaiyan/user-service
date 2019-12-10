@@ -15,7 +15,7 @@ use Nos\Http\Request;
 use Nos\Http\Response;
 use User\UserModel;
 
-class User_UpdateController extends BaseController
+class V1_User_UpdateController extends BaseController
 {
 
     /**

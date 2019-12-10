@@ -15,7 +15,7 @@ use Nos\Http\Response;
 use User\UserModel;
 use Resource\ResourceModel;
 
-class User_QueryController extends BaseController
+class V1_User_QueryController extends BaseController
 {
 
     /**

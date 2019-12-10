@@ -20,7 +20,7 @@ use User\UserModel;
 use Nos\Comm\Redis;
 use Nos\Http\Response;
 
-class Unified_RegisterController extends BaseController
+class V1_Unified_RegisterController extends BaseController
 {
 
     /**
@@ -88,7 +88,7 @@ class Unified_RegisterController extends BaseController
         $aHttpConfig = Config::get('http.ini');
         $strHost     = $aHttpConfig['host'];
         $strParams   = base64_encode($nUserId . '_' . $aParams['callback_url']);
-        $strActivateCallback = $strHost . '/unified/callback?data=' . $strParams;
+        $strActivateCallback = $strHost . '/v1/unified/callback?data=' . $strParams;
         $strContent  = "请点击该链接激活您的账号：\n" . $strActivateCallback;
         // 发邮件
         Email::send($strEmail, '请激活您的用户账号', $strContent);

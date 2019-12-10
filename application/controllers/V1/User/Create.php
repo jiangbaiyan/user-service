@@ -1,6 +1,6 @@
 <?php
 /**
- * 用户删除接口
+ * 用户创建接口
  * Created by PhpStorm.
  * User: jiangbaiyan
  * Date: 2019/10/27
@@ -15,21 +15,22 @@ use Nos\Http\Request;
 use Nos\Http\Response;
 use User\UserModel;
 
-class User_DeleteController extends BaseController
+class V1_User_CreateController extends BaseController
 {
 
     /**
-     * 删除用户
+     * 用户创建接口
+     * @return string
      * @throws CoreException
-     * @throws OperateFailedException
      * @throws ParamValidateFailedException
+     * @throws OperateFailedException
      */
     public function indexAction()
     {
         Validator::make($aParams = Request::all(), [
-            'id' => 'required|numeric'
+            'data' => 'required|array'
         ]);
-        UserModel::deleteById($aParams['id']);
+        UserModel::create($aParams['data']);
         return Response::apiSuccess();
     }
 }

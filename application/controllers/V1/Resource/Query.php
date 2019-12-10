@@ -14,7 +14,7 @@ use Nos\Http\Request;
 use Nos\Http\Response;
 use Resource\ResourceModel;
 
-class Resource_QueryController extends BaseController
+class V1_Resource_QueryController extends BaseController
 {
 
     /**

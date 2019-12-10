@@ -1,29 +1,26 @@
 <?php
 /**
- * 统一登出
+ * 统一根据token查询用户
  * Created by PhpStorm.
  * User: jiangbaiyan
- * Date: 2019-11-2
- * Time: 21:39
+ * Date: 2019-11-3
+ * Time: 10:10
  */
 
 use Nos\Comm\Validator;
 use Nos\Exception\CoreException;
 use Nos\Exception\ParamValidateFailedException;
 use Nos\Http\Request;
-use Nos\Comm\Redis;
+use Nos\Exception\UnauthorizedException;
 use Nos\Http\Response;
+use User\UserModel;
 
-class Unified_LogoutController extends BaseController
+class V1_Unified_User_QueryController extends BaseController
 {
 
     /**
-     * redis中token的key前缀
-     */
-    const REDIS_KEY_UNIFIED_TOKEN = 'unified_token_';
-
-    /**
-     * 登出
+     * 根据token获取用户信息
+     * @throws UnauthorizedException
      * @throws CoreException
      * @throws ParamValidateFailedException
      */
@@ -33,7 +30,9 @@ class Unified_LogoutController extends BaseController
             'unified_token' => 'required'
         ]);
         $strToken = $aParams['unified_token'];
-        Redis::getInstance()->expire(self::REDIS_KEY_UNIFIED_TOKEN . $strToken, 0);
-        Response::apiSuccess();
+        $aUser = UserModel::getUserByUnifiedToken($strToken, [
+            'id', 'email', 'is_activate', 'name', 'created_at', 'updated_at', 'is_delete'
+        ]);
+        Response::apiSuccess($aUser);
     }
 }
