@@ -71,18 +71,12 @@ class CommonModel extends BaseModel
      * @param array $aData
      * @return int
      * @throws CoreException
-     * @throws OperateFailedException
      */
     public static function updateById(int $nId, array $aData)
     {
-        $strTable = static::$table;
-        $nRows = self::update($aData, [
+        return self::update($aData, [
             ['id', '=', $nId]
         ]);
-        if (!$nRows) {
-            throw new OperateFailedException("{$strTable}|update_failed|params:" . json_encode($aData) . '|id:' . $nId);
-        }
-        return $nRows;
     }
 
 
