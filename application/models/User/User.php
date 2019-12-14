@@ -119,7 +119,7 @@ class UserModel extends CommonModel
         if (!$aResource['total']) {
             throw new OperateFailedException("register|resource_id:{$aData['resource_id']}_not_exists");
         }
-        $aResource = $aResource['data'];
+        $aResource = $aResource['data'][0];
         $aData['password'] = md5($aResource['full_key'] . $aData['password']);
         return parent::create($aData);
     }
