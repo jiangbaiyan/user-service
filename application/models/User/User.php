@@ -86,7 +86,7 @@ class UserModel extends CommonModel
                 ['id', '!=', $nId]
             ]);
             if ($aUser['total']) {
-                throw new OperateFailedException("register|email:{$aData['email']}_has_been_registered");
+                throw new OperateFailedException("user_model|email:{$aData['email']}_has_been_registered");
             }
             $aUpdate['email'] = $aData['email'];
         }
