@@ -44,12 +44,7 @@ class V1_Unified_RegisterController extends BaseController
         $strEmail    = $aParams['email'];
         $strPassword = $aParams['password'];
         $strAppId    = $aParams['appId'];
-        // 防止重复注册
-        $aUser = UserModel::getUserByEmail($strEmail);
-        if ($aUser['total']) {
-            throw new OperateFailedException("register|email:{$strEmail}_has_been_registered");
-        }
-        $strName = $aParams['name'] ?? '';
+        $strName     = $aParams['name'] ?? '';
         // 查询该appId是否已经在资源节点中注册
         $aResource = ResourceModel::getResourceByFullKey($aParams['appId']);
         if (empty($aResource['total'])) {
@@ -60,7 +55,7 @@ class V1_Unified_RegisterController extends BaseController
         // 组装插入数据
         $aInsert = [
             'email'       => $strEmail,
-            'password'    => md5($strAppId . $strPassword),
+            'password'    => $strPassword,
             'name'        => $strName,
             'resource_id' => $nResourceId,
             'is_activate' => UserModel::NOT_ACTIVATE

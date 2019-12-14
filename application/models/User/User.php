@@ -102,4 +102,26 @@ class UserModel extends CommonModel
         return self::updateById($nId, $aData);
     }
 
+    /**
+     * 创建用户
+     * @param array $aData
+     * @return int
+     * @throws CoreException
+     * @throws OperateFailedException
+     */
+    public static function create(array $aData)
+    {
+        $aUser = self::getUserByEmail($aData['email']);
+        if ($aUser['total']) {
+            throw new OperateFailedException("register|email:{$aData['email']}_has_been_registered");
+        }
+        $aResource = ResourceModel::getById($aData['resource_id']);
+        if (!$aResource['total']) {
+            throw new OperateFailedException("register|resource_id:{$aData['resource_id']}_not_exists");
+        }
+        $aResource = $aResource['data'];
+        $aData['password'] = md5($aResource['full_key'] . $aData['password']);
+        return parent::create($aData);
+    }
+
 }
