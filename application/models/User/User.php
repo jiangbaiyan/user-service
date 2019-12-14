@@ -81,6 +81,13 @@ class UserModel extends CommonModel
             $aUpdate['name'] = $aData['name'];
         }
         if (isset($aData['email'])) {
+            $aUser = self::select(['id'], [
+                ['email', '=', $aData['email']],
+                ['id', '!=', $nId]
+            ]);
+            if ($aUser['total']) {
+                throw new OperateFailedException("register|email:{$aData['email']}_has_been_registered");
+            }
             $aUpdate['email'] = $aData['email'];
         }
         if (isset($aData['is_activate'])) {

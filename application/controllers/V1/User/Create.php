@@ -30,6 +30,10 @@ class V1_User_CreateController extends BaseController
         Validator::make($aParams = Request::all(), [
             'data' => 'required|array'
         ]);
+        $aUser = UserModel::getUserByEmail($aParams['data']['email']);
+        if ($aUser['total']) {
+            throw new OperateFailedException("register|email:{$aParams['data']['email']}_has_been_registered");
+        }
         UserModel::create($aParams['data']);
         return Response::apiSuccess();
     }
