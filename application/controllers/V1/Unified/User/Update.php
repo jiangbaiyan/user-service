@@ -63,6 +63,6 @@ class V1_Unified_User_UpdateController extends BaseController
             }
         }
         UserModel::updateById($nUserId, $aParams['data']);
-        Response::apiSuccess();
+        return Response::apiSuccess();
     }
 }

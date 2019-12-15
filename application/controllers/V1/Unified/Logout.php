@@ -34,6 +34,6 @@ class V1_Unified_LogoutController extends BaseController
         ]);
         $strToken = $aParams['unified_token'];
         Redis::getInstance()->expire(self::REDIS_KEY_UNIFIED_TOKEN . $strToken, 0);
-        Response::apiSuccess();
+        return Response::apiSuccess();
     }
 }

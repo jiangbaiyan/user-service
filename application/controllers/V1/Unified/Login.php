@@ -102,7 +102,7 @@ class V1_Unified_LoginController extends BaseController
             if (!$bool) {
                 throw new OperateFailedException('login|redis_set_token_failed');
             }
-            Response::apiSuccess([
+            return Response::apiSuccess([
                 'is_activate'   => UserModel::ACTIVATE,
                 'unified_token' => $strToken
             ]);

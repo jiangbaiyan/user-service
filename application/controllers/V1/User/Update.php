@@ -32,6 +32,6 @@ class V1_User_UpdateController extends BaseController
             'data' => 'required'
         ]);
         UserModel::updateUserById($aParams['id'], $aParams['data']);
-        Response::apiSuccess();
+        return Response::apiSuccess();
     }
 }

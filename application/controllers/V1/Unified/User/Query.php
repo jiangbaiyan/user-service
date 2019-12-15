@@ -33,6 +33,6 @@ class V1_Unified_User_QueryController extends BaseController
         $aUser = UserModel::getUserByUnifiedToken($strToken, [
             'id', 'email', 'is_activate', 'name', 'created_at', 'updated_at', 'is_delete'
         ]);
-        Response::apiSuccess($aUser);
+        return Response::apiSuccess($aUser);
     }
 }

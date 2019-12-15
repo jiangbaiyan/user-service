@@ -89,6 +89,6 @@ class V1_Unified_RegisterController extends BaseController
         Email::send($strEmail, '请激活您的用户账号', $strContent);
         Db::commit();
         // 返回token
-        Response::apiSuccess(['unified_token' => $strToken]);
+        return Response::apiSuccess(['unified_token' => $strToken]);
     }
 }

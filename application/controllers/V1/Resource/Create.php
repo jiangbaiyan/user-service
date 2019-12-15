@@ -28,11 +28,11 @@ class V1_Resource_CreateController extends BaseController
     {
         Validator::make($aParams = Request::all(), [
             'parent_resource_id' => 'required|integer',
-            'key' => 'required'
+            'cur_key' => 'required'
         ]);
         $aQueue = [];
         $nParentResourceId = $aParams['parent_resource_id'];
-        $strCurKey  = $aParams['key'];
+        $strCurKey         = $aParams['cur_key'];
         // 父节点id为0，说明它是根节点
         if ($nParentResourceId == 0) {
             $strFullKey = $strCurKey;
@@ -44,7 +44,7 @@ class V1_Resource_CreateController extends BaseController
             $strFullKey = trim($strFullKey, '.');
         }
         // 查询节点名是否已经存在
-        if (ResourceModel::getResourceByFullKey($strFullKey)) {
+        if (ResourceModel::getResourceByFullKey($strFullKey)['total']) {
             throw new OperateFailedException('resource|resource_key_exists');
         }
         $aInsert = [
@@ -53,7 +53,7 @@ class V1_Resource_CreateController extends BaseController
             'full_key' => $strFullKey
         ];
         ResourceModel::create($aInsert);
-        Response::apiSuccess();
+        return Response::apiSuccess();
     }
 
 
@@ -71,9 +71,10 @@ class V1_Resource_CreateController extends BaseController
         if (!empty($nParentResourceId)) {
             // 查询父节点名称
             $aNode = ResourceModel::getById($nParentResourceId);
-            if (!$aNode) {
+            if (!$aNode['total']) {
                 throw new OperateFailedException("resource|parent_node:{$nParentResourceId}_not_exists");
             }
+            $aNode = $aNode['data'][0];
             $strCurKey         = $aNode['cur_key'];
             $nParentResourceId = $aNode['parent_resource_id'];
             // 将节点名放到数组的前面，这样层级高的节点就在数组的前面
@@ -84,4 +85,5 @@ class V1_Resource_CreateController extends BaseController
             return true;
         }
     }
+
 }
