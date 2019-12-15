@@ -38,9 +38,9 @@ abstract class BaseController extends Controller_Abstract
     protected function auth()
     {
         Validator::make($aParams = Request::all(), [
-            'appId' => 'required',
+            'appId'       => 'required',
             'accessToken' => 'required',
-            'timestamp' => 'required'
+            'timestamp'   => 'required'
         ]);
         $strAppId = $aParams['appId'];
         // 测试

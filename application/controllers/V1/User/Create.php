@@ -28,7 +28,10 @@ class V1_User_CreateController extends BaseController
     public function indexAction()
     {
         Validator::make($aParams = Request::all(), [
-            'data' => 'required|array'
+            'email'       => 'required|email',
+            'password'    => 'required',
+            'resource_id' => 'required|numeric',
+            'is_active'   => 'numeric'
         ]);
         UserModel::create($aParams['data']);
         return Response::apiSuccess();

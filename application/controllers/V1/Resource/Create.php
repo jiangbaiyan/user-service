@@ -27,8 +27,8 @@ class V1_Resource_CreateController extends BaseController
     public function indexAction()
     {
         Validator::make($aParams = Request::all(), [
-            'parent_resource_id' => 'required|integer',
-            'cur_key' => 'required'
+            'parent_resource_id' => 'required|numeric',
+            'cur_key'            => 'required'
         ]);
         $aQueue = [];
         $nParentResourceId = $aParams['parent_resource_id'];

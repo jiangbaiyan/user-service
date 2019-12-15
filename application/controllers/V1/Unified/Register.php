@@ -37,8 +37,8 @@ class V1_Unified_RegisterController extends BaseController
     public function indexAction()
     {
         Validator::make($aParams = Request::all(), [
-            'email' => 'required|email',
-            'password' => 'required',
+            'email'        => 'required|email',
+            'password'     => 'required',
             'callback_url' => 'required'
         ]);
         $strEmail    = $aParams['email'];

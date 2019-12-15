@@ -27,8 +27,8 @@ class V1_User_QueryController extends BaseController
     public function indexAction()
     {
         Validator::make($aParams = Request::all(), [
-            'page'   => 'integer',
-            'length' => 'integer',
+            'page'   => 'numeric',
+            'length' => 'numeric',
             'query'   => 'array'
         ]);
         $page   = $aParams['page'] ?? 0;

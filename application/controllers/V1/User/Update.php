@@ -11,6 +11,7 @@ use Nos\Comm\Validator;
 use Nos\Exception\CoreException;
 use Nos\Exception\OperateFailedException;
 use Nos\Exception\ParamValidateFailedException as ParamValidateFailedExceptionAlias;
+use Nos\Exception\ResourceNotFoundException;
 use Nos\Http\Request;
 use Nos\Http\Response;
 use User\UserModel;
@@ -23,12 +24,12 @@ class V1_User_UpdateController extends BaseController
      * @throws CoreException
      * @throws OperateFailedException
      * @throws ParamValidateFailedExceptionAlias
-     * @throws \Nos\Exception\ResourceNotFoundException
+     * @throws ResourceNotFoundException
      */
     public function indexAction()
     {
         Validator::make($aParams = Request::all(), [
-            'id' => 'required|numeric',
+            'id'   => 'required|numeric',
             'data' => 'required'
         ]);
         UserModel::updateUserById($aParams['id'], $aParams['data']);
