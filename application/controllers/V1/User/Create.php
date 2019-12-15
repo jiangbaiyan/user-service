@@ -31,7 +31,7 @@ class V1_User_CreateController extends BaseController
             'email'       => 'required|email',
             'password'    => 'required',
             'resource_id' => 'required|numeric',
-            'is_activate'   => 'numeric'
+            'is_activate' => 'numeric'
         ]);
         $aInsert = [
             'email'       => $aParams['email'],
