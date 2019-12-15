@@ -31,13 +31,13 @@ class V1_User_CreateController extends BaseController
             'email'       => 'required|email',
             'password'    => 'required',
             'resource_id' => 'required|numeric',
-            'is_active'   => 'numeric'
+            'is_activate'   => 'numeric'
         ]);
         $aInsert = [
             'email'       => $aParams['email'],
             'password'    => $aParams['password'],
             'resource_id' => $aParams['resource_id'],
-            'is_active'   => $aParams['is_active'] ?? 0
+            'is_activate' => $aParams['is_activate'] ?? 0
         ];
         UserModel::create($aInsert);
         return Response::apiSuccess();
