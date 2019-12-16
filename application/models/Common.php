@@ -56,6 +56,9 @@ class CommonModel extends BaseModel
      */
     public static function create(array $aData)
     {
+        if (empty($aData)) {
+            return true;
+        }
         $strTable = static::$table;
         $nId = static::insert($aData);
         if (!$nId) {
@@ -74,6 +77,9 @@ class CommonModel extends BaseModel
      */
     public static function updateById(int $nId, array $aData)
     {
+        if (empty($aData)) {
+            return true;
+        }
         return self::update($aData, [
             ['id', '=', $nId]
         ]);
