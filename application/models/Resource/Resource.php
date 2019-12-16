@@ -50,8 +50,8 @@ class ResourceModel extends CommonModel
                 if ($aData['parent_resource_id'] == $nId) {
                     throw new OperateFailedException("resource_model|parent_resource_id_cannot_be_cur_id|id:{$nId}");
                 }
-                $aData = ResourceModel::getById($aData['parent_resource_id']);
-                if (!$aData['total']) {
+                $aResource = ResourceModel::getById($aData['parent_resource_id']);
+                if (!$aResource['total']) {
                     throw new ResourceNotFoundException("resource_model|parent_resource_id:{$aData['parent_resource_id']}_not_found");
                 }
             }

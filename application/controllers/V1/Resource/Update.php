@@ -9,6 +9,7 @@
 
 use Nos\Comm\Validator;
 use Nos\Exception\CoreException;
+use Nos\Exception\OperateFailedException;
 use Nos\Exception\ParamValidateFailedException;
 use Nos\Exception\ResourceNotFoundException;
 use Nos\Http\Request;
@@ -19,9 +20,11 @@ class V1_Resource_UpdateController extends BaseController
 {
 
     /**
+     * @return string
      * @throws CoreException
      * @throws ParamValidateFailedException
      * @throws ResourceNotFoundException
+     * @throws OperateFailedException
      */
     public function indexAction()
     {
