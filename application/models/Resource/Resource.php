@@ -11,6 +11,7 @@ namespace Resource;
 
 use CommonModel;
 use Nos\Exception\CoreException;
+use Nos\Exception\OperateFailedException;
 use Nos\Exception\ResourceNotFoundException;
 
 class ResourceModel extends CommonModel
@@ -38,6 +39,7 @@ class ResourceModel extends CommonModel
      * @param array $aData
      * @return int|void
      * @throws CoreException
+     * @throws OperateFailedException
      * @throws ResourceNotFoundException
      */
     public static function updateById(int $nId, array $aData)
@@ -45,6 +47,9 @@ class ResourceModel extends CommonModel
         $aUpdate = [];
         if (isset($aData['parent_resource_id'])) {
             if ($aData['parent_resource_id']) {
+                if ($aData['parent_resource_id'] == $nId) {
+                    throw new OperateFailedException("resource_model|parent_resource_id_cannot_be_cur_id|id:{$nId}");
+                }
                 $aData = ResourceModel::getById($aData['parent_resource_id']);
                 if (!$aData['total']) {
                     throw new ResourceNotFoundException("resource_model|parent_resource_id:{$aData['parent_resource_id']}_not_found");
