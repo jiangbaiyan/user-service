@@ -39,7 +39,6 @@ class V1_User_QueryController extends BaseController
         foreach ($aData['data'] as $nKey => &$aValue) {
             $aResource = ResourceModel::getById($aValue['resource_id'])['data'];
             $aValue['resource'] = $aResource[0]['full_key'];
-            unset($aValue['resource_id']);
         }
         return Response::apiSuccess($aData);
     }
