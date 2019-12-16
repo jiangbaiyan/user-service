@@ -44,9 +44,11 @@ class ResourceModel extends CommonModel
     {
         $aUpdate = [];
         if (isset($aData['parent_resource_id'])) {
-            $aData = ResourceModel::getById($aData['parent_resource_id']);
-            if (!$aData['total']) {
-                throw new ResourceNotFoundException("resource_model|parent_resource_id:{$aData['parent_resource_id']}_not_found");
+            if ($aData['parent_resource_id']) {
+                $aData = ResourceModel::getById($aData['parent_resource_id']);
+                if (!$aData['total']) {
+                    throw new ResourceNotFoundException("resource_model|parent_resource_id:{$aData['parent_resource_id']}_not_found");
+                }
             }
             $aUpdate['parent_resource_id'] = $aData['parent_resource_id'];
         }
