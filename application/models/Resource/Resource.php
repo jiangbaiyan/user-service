@@ -41,6 +41,7 @@ class ResourceModel extends CommonModel
      * @return int|void
      * @throws CoreException
      * @throws OperateFailedException
+     * @throws ParamValidateFailedException
      * @throws ResourceNotFoundException
      */
     public static function updateById(int $nId, array $aData)
@@ -60,7 +61,7 @@ class ResourceModel extends CommonModel
         $aUpdate = [];
         $aUpdate['parent_resource_id'] = $aData['parent_resource_id'];
         $aUpdate['cur_key']            = $aData['cur_key'];
-        $aUpdate['full_key']           =  self::getFullKeyByParentResourceId($aData['parent_resource_id'], $aData['cur_key']);;
+        $aUpdate['full_key']           = self::getFullKeyByParentResourceId($aData['parent_resource_id'], $aData['cur_key']);
         return parent::updateById($nId, $aUpdate);
     }
 

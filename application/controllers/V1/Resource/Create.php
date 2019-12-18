@@ -40,8 +40,9 @@ class V1_Resource_CreateController extends BaseController
         }
         $aInsert = [
             'parent_resource_id' => $nParentResourceId,
-            'cur_key'  => $strCurKey,
-            'full_key' => $strFullKey
+            'cur_key'            => $strCurKey,
+            'full_key'           => $strFullKey,
+            'app_secret'         => md5($nParentResourceId . $strFullKey)
         ];
         ResourceModel::create($aInsert);
         return Response::apiSuccess();
