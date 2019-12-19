@@ -39,28 +39,10 @@ class ErrorController extends Controller_Abstract
             'method' => $_SERVER['REQUEST_METHOD'],
             'params' => Request::all()
         ]));
-        // 输出响应
-        switch ($code) {
-            case Response::CODE_CORE_ERROR:
-                Response::apiCoreError();
-                break;
-            case Response::CODE_OPERATE_FAILED:
-                Response::apiOperateFailed();
-                break;
-            case Response::CODE_UNAUTHORIZED:
-                Response::apiUnauthorized();
-                break;
-            case Response::CODE_PARAM_ERROR:
-                Response::apiParamValidateFailed();
-                break;
-            case Response::CODE_PERMISSION_DENIED:
-                Response::apiPermissionDenied();
-                break;
-            case Response::CODE_RESOURCE_NOT_FOUND:
-                Response::apiResourceNotFound();
-                break;
-            default:
-                Response::apiCoreError();
+        // 隐藏底层错误返回
+        if ($code == Response::CODE_CORE_ERROR) {
+            return Response::apiCoreError();
         }
+        Response::apiResponse($code, $msg);
     }
 }
