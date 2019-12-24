@@ -84,7 +84,7 @@ class V1_Unified_LoginController extends BaseController
             $strFrontPassword = md5($strAppId . $aParams['password']);
             // 判断二者是否相等
             if ($strFrontPassword != $strBackPassword) {
-                throw new UnauthorizedException("login|wrong_password|front:{$strFrontPassword}|back:{$strBackPassword}");
+                throw new UnauthorizedException("login|wrong_password");
             }
             $strJwtKey = Config::get('application.ini')['jwt_key'];
             // 根据用户数据获取加密token
