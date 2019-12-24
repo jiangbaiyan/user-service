@@ -10,6 +10,7 @@
 namespace User;
 
 use CommonModel;
+use Nos\Comm\Config;
 use Nos\Comm\Redis;
 use Nos\Exception\CoreException;
 use Nos\Exception\OperateFailedException;
@@ -119,8 +120,8 @@ class UserModel extends CommonModel
         if (!$aResource['total']) {
             throw new OperateFailedException("register|resource_id:{$aData['resource_id']}_not_exists");
         }
-        $aResource = $aResource['data'][0];
-        $aData['password'] = md5($aResource['full_key'] . $aData['password']);
+        $strJwtKey = Config::get('application.ini')['jwt_key'];
+        $aData['password'] = md5($strJwtKey . $aData['password']);
         return parent::create($aData);
     }
 

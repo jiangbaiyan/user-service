@@ -51,7 +51,7 @@ abstract class BaseController extends Controller_Abstract
         $strFrontAccessToken = $aParams['accessToken'];
         // 判断前后端的accessToken是否相等
         if ($strFrontAccessToken != $strBackAccessToken) {
-            throw new UnauthorizedException("auth|app:{$strAppId}_auth_failed|frontAccessToken:{$aParams['accessToken']}|backAccessToken:{$strBackAccessToken}|timestamp:{$aParams['timestamp']}");
+            throw new UnauthorizedException("auth|app:{$strAppId}_auth_failed|timestamp:{$aParams['timestamp']}");
         }
         return true;
     }
