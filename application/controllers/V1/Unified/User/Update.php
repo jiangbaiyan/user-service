@@ -50,7 +50,7 @@ class V1_Unified_User_UpdateController extends BaseController
         $strToken = $aParams['unified_token'];
         $nUserId = Redis::getInstance()->get(self::REDIS_KEY_UNIFIED_TOKEN . $strToken);
         if (empty($nUserId)) {
-            throw new UnauthorizedException("unified_update_user|token_invalid");
+            throw new OperateFailedException("unified_update_user|token_invalid");
         }
         foreach ($aParams['data'] as $strField => &$strValue) {
             // 允许修改密码和昵称

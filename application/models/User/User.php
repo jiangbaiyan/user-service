@@ -54,13 +54,13 @@ class UserModel extends CommonModel
      * @param array $aField
      * @return array
      * @throws CoreException
-     * @throws UnauthorizedException
+     * @throws OperateFailedException
      */
     public static function getUserByUnifiedToken(string $strToken, array $aField = ['*'])
     {
         $nUserId = Redis::getInstance()->get(self::REDIS_KEY_UNIFIED_TOKEN . $strToken);
         if (empty($nUserId)) {
-            throw new UnauthorizedException("user_model|token:{$strToken}_invalid");
+            throw new OperateFailedException("user_model|token:{$strToken}_invalid");
         }
         return self::getById($nUserId, $aField);
     }

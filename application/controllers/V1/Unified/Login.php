@@ -31,9 +31,9 @@ class V1_Unified_LoginController extends BaseController
 
     /**
      * 统一登录
-     * @throws OperateFailedException
-     * @throws UnauthorizedException
+     * @return string
      * @throws CoreException
+     * @throws OperateFailedException
      * @throws ParamValidateFailedException
      */
     public function indexAction()
@@ -44,7 +44,7 @@ class V1_Unified_LoginController extends BaseController
             $strToken = $aParams['unified_token'];
             $aUser = UserModel::getUserByUnifiedToken($strToken);
             if (empty($aUser['total'])) {
-                throw new UnauthorizedException("login|user_not_exist");
+                throw new OperateFailedException("login|user_not_exist");
             }
             $aUser = $aUser['data'][0];
             // 如果未激活，告诉客户端，需要做对应跳转
@@ -84,7 +84,7 @@ class V1_Unified_LoginController extends BaseController
             $strFrontPassword = md5($strAppId . $aParams['password']);
             // 判断二者是否相等
             if ($strFrontPassword != $strBackPassword) {
-                throw new UnauthorizedException("login|wrong_password|front:{$strFrontPassword}|back:{$strBackPassword}");
+                throw new OperateFailedException("login|wrong_password|front:{$strFrontPassword}|back:{$strBackPassword}");
             }
             $strJwtKey = Config::get('application.ini')['jwt_key'];
             // 根据用户数据获取加密token
