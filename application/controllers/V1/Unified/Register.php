@@ -20,7 +20,7 @@ use User\UserModel;
 use Nos\Comm\Redis;
 use Nos\Http\Response;
 
-class Unified_RegisterController extends BaseController
+class V1_Unified_RegisterController extends BaseController
 {
 
     /**
@@ -37,19 +37,14 @@ class Unified_RegisterController extends BaseController
     public function indexAction()
     {
         Validator::make($aParams = Request::all(), [
-            'email' => 'required|email',
-            'password' => 'required',
+            'email'        => 'required|email',
+            'password'     => 'required',
             'callback_url' => 'required'
         ]);
         $strEmail    = $aParams['email'];
         $strPassword = $aParams['password'];
         $strAppId    = $aParams['appId'];
-        // 防止重复注册
-        $aUser = UserModel::getUserByEmail($strEmail);
-        if ($aUser['total']) {
-            throw new OperateFailedException("register|email:{$strEmail}_has_been_registered");
-        }
-        $strName = $aParams['name'] ?? '';
+        $strName     = $aParams['name'] ?? '';
         // 查询该appId是否已经在资源节点中注册
         $aResource = ResourceModel::getResourceByFullKey($aParams['appId']);
         if (empty($aResource['total'])) {
@@ -60,7 +55,7 @@ class Unified_RegisterController extends BaseController
         // 组装插入数据
         $aInsert = [
             'email'       => $strEmail,
-            'password'    => md5($strAppId . $strPassword),
+            'password'    => $strPassword,
             'name'        => $strName,
             'resource_id' => $nResourceId,
             'is_activate' => UserModel::NOT_ACTIVATE
@@ -88,12 +83,12 @@ class Unified_RegisterController extends BaseController
         $aHttpConfig = Config::get('http.ini');
         $strHost     = $aHttpConfig['host'];
         $strParams   = base64_encode($nUserId . '_' . $aParams['callback_url']);
-        $strActivateCallback = $strHost . '/unified/callback?data=' . $strParams;
+        $strActivateCallback = $strHost . '/v1/unified/callback?data=' . $strParams;
         $strContent  = "请点击该链接激活您的账号：\n" . $strActivateCallback;
         // 发邮件
         Email::send($strEmail, '请激活您的用户账号', $strContent);
         Db::commit();
         // 返回token
-        Response::apiSuccess(['unified_token' => $strToken]);
+        return Response::apiSuccess(['unified_token' => $strToken]);
     }
 }

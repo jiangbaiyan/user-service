@@ -14,7 +14,7 @@ use Nos\Exception\ParamValidateFailedException;
 use Nos\Http\Request;
 use User\UserModel;
 
-class Unified_CallbackController extends BaseController
+class V1_Unified_CallbackController extends BaseController
 {
 
     public $auth = false;

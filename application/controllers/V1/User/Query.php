@@ -15,7 +15,7 @@ use Nos\Http\Response;
 use User\UserModel;
 use Resource\ResourceModel;
 
-class User_QueryController extends BaseController
+class V1_User_QueryController extends BaseController
 {
 
     /**
@@ -27,8 +27,8 @@ class User_QueryController extends BaseController
     public function indexAction()
     {
         Validator::make($aParams = Request::all(), [
-            'page'   => 'integer',
-            'length' => 'integer',
+            'page'   => 'numeric',
+            'length' => 'numeric',
             'query'   => 'array'
         ]);
         $page   = $aParams['page'] ?? 0;
@@ -39,7 +39,6 @@ class User_QueryController extends BaseController
         foreach ($aData['data'] as $nKey => &$aValue) {
             $aResource = ResourceModel::getById($aValue['resource_id'])['data'];
             $aValue['resource'] = $aResource[0]['full_key'];
-            unset($aValue['resource_id']);
         }
         return Response::apiSuccess($aData);
     }

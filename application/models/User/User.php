@@ -10,6 +10,7 @@
 namespace User;
 
 use CommonModel;
+use Nos\Comm\Config;
 use Nos\Comm\Redis;
 use Nos\Exception\CoreException;
 use Nos\Exception\OperateFailedException;
@@ -54,13 +55,13 @@ class UserModel extends CommonModel
      * @param array $aField
      * @return array
      * @throws CoreException
-     * @throws UnauthorizedException
+     * @throws OperateFailedException
      */
     public static function getUserByUnifiedToken(string $strToken, array $aField = ['*'])
     {
         $nUserId = Redis::getInstance()->get(self::REDIS_KEY_UNIFIED_TOKEN . $strToken);
         if (empty($nUserId)) {
-            throw new UnauthorizedException("user_model|token:{$strToken}_invalid");
+            throw new OperateFailedException("user_model|token:{$strToken}_invalid");
         }
         return self::getById($nUserId, $aField);
     }
@@ -81,6 +82,13 @@ class UserModel extends CommonModel
             $aUpdate['name'] = $aData['name'];
         }
         if (isset($aData['email'])) {
+            $aUser = self::select(['id'], [
+                ['email', '=', $aData['email']],
+                ['id', '!=', $nId]
+            ]);
+            if ($aUser['total']) {
+                throw new OperateFailedException("user_model|email:{$aData['email']}_has_been_registered");
+            }
             $aUpdate['email'] = $aData['email'];
         }
         if (isset($aData['is_activate'])) {
@@ -93,6 +101,28 @@ class UserModel extends CommonModel
             }
         }
         return self::updateById($nId, $aData);
+    }
+
+    /**
+     * 创建用户
+     * @param array $aData
+     * @return int
+     * @throws CoreException
+     * @throws OperateFailedException
+     */
+    public static function create(array $aData)
+    {
+        $aUser = self::getUserByEmail($aData['email']);
+        if ($aUser['total']) {
+            throw new OperateFailedException("register|email:{$aData['email']}_has_been_registered");
+        }
+        $aResource = ResourceModel::getById($aData['resource_id']);
+        if (!$aResource['total']) {
+            throw new OperateFailedException("register|resource_id:{$aData['resource_id']}_not_exists");
+        }
+        $strJwtKey = Config::get('application.ini')['jwt_key'];
+        $aData['password'] = md5($strJwtKey . $aData['password']);
+        return parent::create($aData);
     }
 
 }

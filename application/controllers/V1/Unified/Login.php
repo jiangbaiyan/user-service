@@ -20,7 +20,7 @@ use Nos\Http\Response;
 use User\UserModel;
 
 
-class Unified_LoginController extends BaseController
+class V1_Unified_LoginController extends BaseController
 {
 
     /**
@@ -31,10 +31,11 @@ class Unified_LoginController extends BaseController
 
     /**
      * 统一登录
-     * @throws OperateFailedException
-     * @throws UnauthorizedException
+     * @return string
      * @throws CoreException
+     * @throws OperateFailedException
      * @throws ParamValidateFailedException
+     * @throws UnauthorizedException
      */
     public function indexAction()
     {
@@ -44,17 +45,17 @@ class Unified_LoginController extends BaseController
             $strToken = $aParams['unified_token'];
             $aUser = UserModel::getUserByUnifiedToken($strToken);
             if (empty($aUser['total'])) {
-                throw new UnauthorizedException("login|user_not_exist");
+                throw new OperateFailedException("login|user_not_exist");
             }
             $aUser = $aUser['data'][0];
             // 如果未激活，告诉客户端，需要做对应跳转
             if ($aUser['is_activate'] == UserModel::NOT_ACTIVATE) {
-                Response::apiSuccess([
+                return Response::apiSuccess([
                     'is_activate'   => UserModel::NOT_ACTIVATE,
                     'unified_token' => '',
                 ]);
             } else {
-                Response::apiSuccess([
+                return Response::apiSuccess([
                     'is_activate'   => UserModel::ACTIVATE,
                     'unified_token' => $strToken,
                 ]);
@@ -72,21 +73,21 @@ class Unified_LoginController extends BaseController
             $aUser = $aUser['data'][0];
             // 如果未激活，不返回token
             if ($aUser['is_activate'] == UserModel::NOT_ACTIVATE) {
-                Response::apiSuccess([
+                return Response::apiSuccess([
                     'is_activate'   => UserModel::NOT_ACTIVATE,
                     'unified_token' => '',
                 ]);
             }
+            // 取出jwt_key
+            $strJwtKey = Config::get('application.ini')['jwt_key'];
             // 取出数据库中的密码
-            $strBackPassword = $aUser['password'];
-            $strAppId        = $aParams['appId'];
+            $strBackPassword  = $aUser['password'];
             // 将前端传过来的密码进行同样的加密运算
-            $strFrontPassword = md5($strAppId . $aParams['password']);
+            $strFrontPassword = md5($strJwtKey . $aParams['password']);
             // 判断二者是否相等
             if ($strFrontPassword != $strBackPassword) {
-                throw new UnauthorizedException("login|wrong_password|front:{$strFrontPassword}|back:{$strBackPassword}");
+                throw new UnauthorizedException("login|wrong_password");
             }
-            $strJwtKey = Config::get('application.ini')['jwt_key'];
             // 根据用户数据获取加密token
             try {
                 $aSeed = [
@@ -102,7 +103,7 @@ class Unified_LoginController extends BaseController
             if (!$bool) {
                 throw new OperateFailedException('login|redis_set_token_failed');
             }
-            Response::apiSuccess([
+            return Response::apiSuccess([
                 'is_activate'   => UserModel::ACTIVATE,
                 'unified_token' => $strToken
             ]);
